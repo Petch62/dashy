@@ -1,63 +1,115 @@
 <template>
-  <div class="config-options">
+  <div class="config-options" v-click-outside="closeViewSwitcher">
     <!-- Button and label -->
-    <span>Config</span>
+    <span class="config-label">{{ $t('settings.config-launcher-label') }}</span>
     <div class="config-buttons">
       <IconSpanner @click="showEditor()" tabindex="-2"
-        v-tooltip="tooltip('Update configuration locally')" />
-      <IconCloud @click="showCloudModal()" tabindex="-2"
-        v-tooltip="tooltip('Backup / restore cloud config')" />
+        v-tooltip="tooltip($t('settings.config-launcher-tooltip'))" />
+      <IconInteractiveEditor @click="startInteractiveEditor()" tabindex="-2"
+        v-tooltip="tooltip(enterEditModeTooltip)"
+        :class="(isEditMode || !isEditAllowed) ? 'disabled' : ''" />
+      <IconViewMode @click="openChangeViewMenu()" tabindex="-2"
+        v-tooltip="tooltip($t('alternate-views.alternate-view-heading'))" />
     </div>
 
     <!-- Modal containing all the configuration options -->
-    <modal :name="modalNames.CONF_EDITOR" :resizable="true" width="60%" height="80%"
-      @closed="$emit('modalChanged', false)">
+    <modal :name="modalNames.CONF_EDITOR" :resizable="true" width="60%" height="85%"
+      @closed="editorClosed" classes="dashy-modal">
       <ConfigContainer :config="combineConfig()" />
     </modal>
 
-    <!-- Modal for cloud backup and restore options -->
-    <modal :name="modalNames.CLOUD_BACKUP" :resizable="true" width="65%" height="60%"
-      @closed="$emit('modalChanged', false)">
-      <CloudBackupRestore :config="combineConfig()" />
+    <!-- Modal for manually changing locale -->
+    <modal :name="modalNames.LANG_SWITCHER" classes="dashy-modal"
+      :resizable="true" width="35%" height="60%">
+      <LanguageSwitcher />
     </modal>
+
+    <!-- Menu for switching view -->
+    <div v-if="viewSwitcherOpen" class="view-switcher">
+      <ul>
+        <li>
+          <router-link to="/home">
+            <IconHome /><span>{{ $t('alternate-views.default') }}</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/minimal">
+            <IconMinimalView /><span>{{ $t('alternate-views.minimal') }}</span>
+          </router-link>
+        <li>
+          <router-link to="/workspace">
+            <IconWorkspaceView /><span>{{ $t('alternate-views.workspace') }}</span>
+          </router-link>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-
-import IconSpanner from '@/assets/interface-icons/config-editor.svg';
-import IconCloud from '@/assets/interface-icons/cloud-backup-restore.svg';
+// Import components, and store-key identifiers
 import ConfigContainer from '@/components/Configuration/ConfigContainer';
-import CloudBackupRestore from '@/components/Configuration/CloudBackupRestore';
+import LanguageSwitcher from '@/components/Settings/LanguageSwitcher';
+import Keys from '@/utils/StoreMutations';
 import { topLevelConfKeys, localStorageKeys, modalNames } from '@/utils/defaults';
+// Import icons for config launcher buttons
+import IconSpanner from '@/assets/interface-icons/config-editor.svg';
+import IconInteractiveEditor from '@/assets/interface-icons/interactive-editor-edit-mode.svg';
+import IconViewMode from '@/assets/interface-icons/application-change-view.svg';
+import IconHome from '@/assets/interface-icons/application-home.svg';
+import IconWorkspaceView from '@/assets/interface-icons/open-workspace.svg';
+import IconMinimalView from '@/assets/interface-icons/application-minimal.svg';
 
 export default {
   name: 'ConfigLauncher',
   data() {
     return {
       modalNames,
+      viewSwitcherOpen: false,
     };
   },
   components: {
-    IconSpanner,
-    IconCloud,
     ConfigContainer,
-    CloudBackupRestore,
+    LanguageSwitcher,
+    IconSpanner,
+    IconInteractiveEditor,
+    IconViewMode,
+    IconHome,
+    IconWorkspaceView,
+    IconMinimalView,
   },
-  props: {
-    sections: Array,
-    pageInfo: Object,
-    appConfig: Object,
+  computed: {
+    sections() {
+      return this.$store.getters.sections;
+    },
+    appConfig() {
+      return this.$store.getters.appConfig;
+    },
+    pageInfo() {
+      return this.$store.getters.pageInfo;
+    },
+    isEditMode() {
+      return this.$store.state.editMode;
+    },
+    isEditAllowed() {
+      return this.$store.getters.permissions.allowViewConfig;
+    },
+    /* Tooltip text for Edit Mode button, to change depending on it in edit mode */
+    enterEditModeTooltip() {
+      if (!this.isEditAllowed) return 'Config editor not available';
+      return this.$t(
+        `interactive-editor.menu.${this.isEditMode
+          ? 'edit-mode-subtitle' : 'start-editing-tooltip'}`,
+      );
+    },
   },
   methods: {
     showEditor: function show() {
-      // TODO: If users first time, then show note explaining that config is only stored locally
       this.$modal.show(modalNames.CONF_EDITOR);
-      this.$emit('modalChanged', true);
+      this.$store.commit(Keys.SET_MODAL_OPEN, true);
     },
-    showCloudModal: function show() {
-      this.$modal.show(modalNames.CLOUD_BACKUP);
-      this.$emit('modalChanged', true);
+    editorClosed: function show() {
+      this.$store.commit(Keys.SET_MODAL_OPEN, false);
     },
     combineConfig() {
       const conf = {};
@@ -71,43 +123,63 @@ export default {
     tooltip(content) {
       return { content, trigger: 'hover focus', delay: 250 };
     },
+    openChangeViewMenu() {
+      this.viewSwitcherOpen = !this.viewSwitcherOpen;
+    },
+    closeViewSwitcher() {
+      this.viewSwitcherOpen = false;
+    },
+    startInteractiveEditor() {
+      if (!this.isEditMode && this.isEditAllowed) {
+        this.$store.commit(Keys.SET_EDIT_MODE, true);
+      }
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
+@import '@/styles/style-helpers.scss';
+
 .config-options {
+  @extend .svg-button;
   display: flex;
   flex-direction: column;
   color: var(--settings-text-color);
-  svg {
-    path {
-      fill: var(--settings-text-color);
-    }
-    width: 1rem;
-    height: 1rem;
-    margin: 0.2rem;
-    padding: 0.2rem;
-    text-align: center;
-    background: var(--background);
-    border: 1px solid currentColor;
-    border-radius: var(--curve-factor);
-    cursor: pointer;
-    &:hover, &.selected {
-      background: var(--settings-text-color);
-      path { fill: var(--background); }
+  min-width: 3.2rem;
+}
+
+.view-switcher {
+  position: absolute;
+  right: 1rem;
+  margin-top: 3rem;
+  z-index: 5;
+  background: var(--background);
+  border: 1px solid var(--settings-text-color);
+  border-radius: var(--curve-factor);
+  box-shadow: var(--settings-container-shadow);
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      cursor: pointer;
+      padding: 0.25rem 0.75rem;
+      a {
+        color: var(--settings-text-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+      &:hover {
+        background: var(--settings-text-color);
+        a { color: var(--background); }
+      }
+      svg {
+        margin: 0 0.25rem 0 0;
+        border: none;
+      }
     }
   }
 }
-</style>
-
-<style lang="scss">
-  .vm--modal {
-    box-shadow: 0 40px 70px -2px hsl(0deg 0% 0% / 60%), 1px 1px 6px var(--primary);
-    min-width: 350px;
-    min-height: 600px;
-  }
-  .vm--overlay {
-    background: #00000080;
-  }
 </style>

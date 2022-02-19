@@ -1,6 +1,11 @@
 <template>
-    <header>
-      <PageTitle v-if="titleVisible"  :title="pageInfo.title" :description="pageInfo.description" />
+    <header v-if="componentVisible">
+      <PageTitle
+        v-if="titleVisible"
+        :title="pageInfo.title"
+        :description="pageInfo.description"
+        :logo="pageInfo.logo"
+      />
       <Nav v-if="navVisible" :links="pageInfo.navLinks" class="nav" />
     </header>
 </template>
@@ -8,7 +13,7 @@
 <script>
 import PageTitle from '@/components/PageStrcture/PageTitle.vue';
 import Nav from '@/components/PageStrcture/Nav.vue';
-import { visibleComponents } from '@/utils/defaults';
+import { shouldBeVisible } from '@/utils/SectionHelpers';
 
 export default {
   name: 'Header',
@@ -19,12 +24,19 @@ export default {
   props: {
     pageInfo: Object,
   },
-  data() {
-    return {
-      hiddenComponents: this.pageInfo.hiddenComponents || {},
-      titleVisible: visibleComponents.pageTitle,
-      navVisible: visibleComponents.navigation,
-    };
+  computed: {
+    componentVisible() {
+      return shouldBeVisible(this.$route.name);
+    },
+    visibleComponents() {
+      return this.$store.getters.visibleComponents;
+    },
+    titleVisible() {
+      return this.visibleComponents.pageTitle;
+    },
+    navVisible() {
+      return this.visibleComponents.navigation;
+    },
   },
 };
 </script>
