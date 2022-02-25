@@ -74,7 +74,7 @@ export default {
 <style scoped lang="scss">
 @font-face {
   font-family: 'Digital';
-  src: url('/fonts/Digital-Regular.ttf');
+  src: url('/fonts/7segment.ttf');
 }
 
 .clock {
