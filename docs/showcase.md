@@ -16,6 +16,13 @@
 
 ---
 
+### Hugalafutro Dashy
+> By [@hugalafutro](https://github.com/hugalafutro) <sup>[#505](https://github.com/Lissy93/dashy/discussions/505)</sup>
+
+[![hugalafutro-dashy-screenshot](https://i.ibb.co/PDpLDKS/hugalafutro-dashy.gif)](https://i.ibb.co/PDpLDKS/hugalafutro-dashy.gif)
+
+---
+
 ### Networking Services
 > By [@Lissy93](https://github.com/lissy93)
 
@@ -66,6 +73,12 @@
 > An aggregated board for monitoring system resource usage from a single view
 
 ![screenshot-monitor](https://i.ibb.co/xfK6BGb/system-monitor-board.png)
+
+---
+
+### Browser Startpage
+
+![screenshot-startpage](https://i.ibb.co/rs07dS1/startpage.png)
 
 ---
 
@@ -126,11 +139,35 @@
 
 ---
 
+### Croco_Grievous
+> By [u/Croco_Grievous](https://www.reddit.com/user/Croco_Grievous/) <sup>via [reddit](https://www.reddit.com/r/selfhosted/comments/t4xk3z/everything_started_with_pihole_on_a_raspberry_pi/)</sup>
+
+![screenshot-croco-grievous-dashy](https://i.ibb.co/59XR8KL/dashy-Croco-Grievous.png)
+
+---
+
 ### Crypto Dash	
 > Example usage of widgets to monitor cryptocurrencies news, prices and data. Config is [available here](https://gist.github.com/Lissy93/000f712a5ce98f212817d20bc16bab10#file-example-8-dashy-crypto-widgets-conf-yml)	
 
 
 ![screenshot-crypto-dash](https://user-images.githubusercontent.com/1862727/147394584-352fe3bf-740d-4624-a01b-9003a97bc832.png)
+
+---
+
+### Raspberry PI Docker Dashboard
+
+> By [@henkiewie](https://github.com/henkiewie) <sup>via [#622](https://github.com/Lissy93/dashy/issues/622)</sup>
+
+> I use this dashboard every day. It now even includes a player for a radio stream which I configured with Logitech media server and icecast. I made an smaller version of the grafana dashboard to fit an iframe in kiosk mode, so it monitors the most important values of my RPI. The PI is in Argon m2 case and used as a NAS. The dashboard is a copy of the adventure theme with some changes saved in `/app/src/styles/user-defined-themes.scss`
+
+![screenshot-henkiewie-dashy](https://i.ibb.co/jGzPm6b/henkiewie-dashy-showcase.png)
+
+---
+
+### Stefantigro
+> By [u/stefantigro](https://www.reddit.com/user/stefantigro/) <sup>via [reddit](https://www.reddit.com/r/selfhosted/comments/t5oril/been_selfhosting_close_to_half_a_year_now_all/)</sup>
+
+![screenshot-stefantigro-dashy](https://i.ibb.co/1Kb43Yy/dashy-stefantigro.png)
 
 ---
 
