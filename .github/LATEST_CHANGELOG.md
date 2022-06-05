@@ -1,17 +1,7 @@
-## ✨ 2.0.9 Adds Multi-Page Support [PR #663](https://github.com/Lissy93/dashy/pull/663)
-- Fix KeyCloak API URL (#564)
-- Fix guest has config access (#590)
-- Fix collapsible content in multi-page support (#626)
-- Fix layout and item size buttons ( #629)
-- Refactor make request in RSS widget (#632)
-- Fix material-design-icons header in schema (#640)
-- Add option to hide seconds in clock widget (#644)
-- Fix pageInfo not being read in router (#645)
-- Fix startingView not honored (#646)
-- Fix Status Check default (#651)
-- Add option to hide image in SportsScores Widget (#654)
-- Add Adventure-basic theme (#655)
-- Write docs for sub-items (#657)
-- Add Font-Awesome displaying as square to troubleshooting guide (#659)
-- Show expand / collapse in context menu (#660)
-- Only deploy new release when relevant files have changed
+## ⚡️ 2.0.7 Improves handling of Sections and Items [PR #595](https://github.com/Lissy93/dashy/pull/595)
+- Adds functionality for sub-items / item-groups
+- Creates an item mixin, for reusing functionality
+- Item width calculated based on parent section width
+- Improved mobile support, long-press for right-click
+- Adds 2 new themes (`lissy` and `charry-blossom`)
+- Adds 2 new widgets (`mullvad-status`, and `blacklist-check`)

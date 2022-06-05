@@ -47,10 +47,6 @@
           </Button>
           <!-- Display app version and language -->
           <p class="language">{{ getLanguage() }}</p>
-          <p v-if="$store.state.currentConfigInfo" class="config-location">
-            Using Config From<br>
-            {{ $store.state.currentConfigInfo.confPath }}
-          </p>
           <AppVersion />
         </div>
         <!-- Display note if Config disabled, or if on mobile -->
@@ -249,7 +245,7 @@ a.hyperlink-wrapper {
   width: 100%;
 }
 
-p.app-version, p.language, p.config-location {
+p.app-version, p.language {
   margin: 0.5rem auto;
   font-size: 1rem;
   color: var(--transparent-white-50);
@@ -314,7 +310,7 @@ div.code-container {
   display: flex;
   flex-direction: column;
   background: var(--config-settings-background);
-  height: calc(100% + 1rem);
+  height: calc(100% - 2rem);
   width: fit-content;
   margin: 0 auto;
   padding: 2rem 1rem 0;
@@ -326,14 +322,13 @@ div.code-container {
 
 .config-note {
   width: 80%;
-  max-width: 700px;
-  left: 10%;
   bottom: 1rem;
+  left: 10%;
   margin: 0.5rem auto;
   padding: 0.5rem 0.75rem;
-  text-align: center;
   border: 1px dashed var(--config-settings-color);
   border-radius: var(--curve-factor);
+  text-align: left;
   opacity: var(--dimming-factor);
   color: var(--config-settings-color);
   background: var(--config-settings-background);

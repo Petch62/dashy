@@ -5,29 +5,6 @@
   ],
   "additionalProperties": false,
   "properties": {
-    "pages": {
-      "title": "Page List",
-      "type": "array",
-      "description": "List of additional config files to load as extra pages",
-      "items": {
-        "title": "Pages",
-        "type": "object",
-        "required": ["name", "path"],
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string",
-            "description": "Unique page identifier"
-          },
-          "path": {
-            "title": "Path",
-            "type": "string",
-            "description": "The file name, or path. If in public directory, use just `file-name.yml`"
-          }
-        }
-      }
-    },
     "pageInfo": {
       "type": "object",
       "properties": {
@@ -322,7 +299,7 @@
           "description": "If true, font-awesome will be loaded, if false they will not be. If left empty, icons will only be loaded if needed"
         },
         "enableMaterialDesignIcons": {
-          "title": "Enable Material Design Icons?",
+          "title": "Enable Font-Awesome?",
           "type": "boolean",
           "default": false,
           "description": "If true, material-design-icons will be loaded, if false they will not be. If left empty, icons will only be loaded if needed"
@@ -475,11 +452,6 @@
                   "title": "Client ID",
                   "type": "string",
                   "description": "The Client ID of the client you created for use with Dashy"
-                },
-                "legacySupport": {
-                  "title": "Legacy Support",
-                  "type": "boolean",
-                  "description": "If using Keycloak 17 or older, then set this to true"
                 }
               }
             }
@@ -854,15 +826,6 @@
                   "title": "Item ID",
                   "type": "string",
                   "description": "Unique ID for each item. Generated automatically, shouldn't need to be set manually."
-                },
-                "subItems": {
-                  "title": "Sub-Items",
-                  "type": "array",
-                  "description": "List of sub-items",
-                  "items": {
-                    "type": "object",
-                    "properties": {}
-                  }
                 }
               }
             }

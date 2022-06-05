@@ -1,6 +1,6 @@
 {
   "name": "Dashy",
-  "version": "2.0.9",
+  "version": "2.0.7",
   "license": "MIT",
   "main": "server",
   "author": "Alicia Sykes <alicia@omg.lol> (https://aliciasykes.com)",
@@ -47,7 +47,6 @@
   },
   "devDependencies": {
     "@architect/sandbox": "^4.5.2",
-    "@babel/preset-env": "^7.17.10",
     "@vue/cli-plugin-babel": "^4.5.15",
     "@vue/cli-plugin-eslint": "^4.5.15",
     "@vue/cli-plugin-pwa": "^4.5.15",
@@ -87,12 +86,6 @@
     "parserOptions": {
       "parser": "babel-eslint"
     }
-  },
-  "babel": {
-    "presets": [
-      "@vue/app",
-      "@babel/preset-env"
-    ]
   },
   "postcss": {
     "plugins": {

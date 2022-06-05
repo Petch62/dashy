@@ -94,7 +94,6 @@
       v-click-outside="closeContextMenu"
       @openEditSection="openEditSection"
       @navigateToSection="navigateToSection"
-      @expandCollapseSection="expandCollapseSection"
       @removeSection="removeSection"
     />
   </Collapsable>
@@ -178,18 +177,18 @@ export default {
     },
     /* If the sortBy attribute is specified, then return sorted data */
     sortedItems() {
-      const items = [...this.items];
+      let { items } = this;
       if (this.appConfig.disableSmartSort) return items;
       if (this.sortOrder === 'alphabetical') {
-        return this.sortAlphabetically(items);
+        this.sortAlphabetically(items);
       } else if (this.sortOrder === 'reverse-alphabetical') {
-        return this.sortAlphabetically(items).reverse();
+        this.sortAlphabetically(items).reverse();
       } else if (this.sortOrder === 'most-used') {
-        return this.sortByMostUsed(items);
+        items = this.sortByMostUsed(items);
       } else if (this.sortOrder === 'last-used') {
-        return this.sortByLastUsed(items);
+        items = this.sortByLastUsed(items);
       } else if (this.sortOrder === 'random') {
-        return this.sortRandomly(items);
+        items = this.sortRandomly(items);
       } else if (this.sortOrder && this.sortOrder !== 'default') {
         ErrorHandler(`Unknown Sort order '${this.sortOrder}' under '${this.title}'`);
       }
@@ -251,12 +250,6 @@ export default {
       router.push({ path: `/home/${sectionIdentifier}` });
       this.closeContextMenu();
     },
-    /* Toggle sections collapse state */
-    expandCollapseSection() {
-      const secElem = this.$refs[this.sectionRef];
-      if (secElem) secElem.toggle();
-      this.closeContextMenu();
-    },
     /* Open the Section Edit Menu */
     openEditSection() {
       this.editMenuOpen = true;
@@ -298,15 +291,13 @@ export default {
     /* Calculate width of section, used to dynamically set number of columns */
     calculateSectionWidth() {
       const secElem = this.$refs[this.sectionRef];
-      if (secElem && secElem.$el.clientWidth) this.sectionWidth = secElem.$el.clientWidth;
+      if (secElem) this.sectionWidth = secElem.$el.clientWidth;
     },
   },
   mounted() {
     // Set the section width, and recalculate when section resized
-    if (this.$refs[this.sectionRef]) {
-      this.resizeObserver = new ResizeObserver(this.calculateSectionWidth)
-        .observe(this.$refs[this.sectionRef].$el);
-    }
+    this.resizeObserver = new ResizeObserver(this.calculateSectionWidth)
+      .observe(this.$refs[this.sectionRef].$el);
   },
   beforeDestroy() {
     // If resize observer set, and element still present, then de-register

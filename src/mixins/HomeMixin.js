@@ -3,13 +3,10 @@
  */
 
 import Defaults, { localStorageKeys, iconCdns } from '@/utils/defaults';
-import Keys from '@/utils/StoreMutations';
 import { searchTiles } from '@/utils/Search';
 
 const HomeMixin = {
-  props: {
-    subPageInfo: Object,
-  },
+  props: {},
   computed: {
     sections() {
       return this.$store.getters.sections;
@@ -26,30 +23,11 @@ const HomeMixin = {
     modalOpen() {
       return this.$store.state.modalOpen;
     },
-    pageId() {
-      return (this.subPageInfo && this.subPageInfo.pageId) ? this.subPageInfo.pageId : 'home';
-    },
   },
   data: () => ({
     searchValue: '',
   }),
-  async mounted() {
-    await this.getConfigForRoute();
-  },
-  watch: {
-    async $route() {
-      await this.getConfigForRoute();
-    },
-  },
   methods: {
-    async getConfigForRoute() {
-      this.$store.commit(Keys.SET_CURRENT_SUB_PAGE, this.subPageInfo);
-      if (this.subPageInfo && this.subPageInfo.confPath) { // Get config for sub-page
-        await this.$store.dispatch(Keys.INITIALIZE_MULTI_PAGE_CONFIG, this.subPageInfo.confPath);
-      } else { // Otherwise, use main config
-        this.$store.commit(Keys.USE_MAIN_CONFIG);
-      }
-    },
     updateModalVisibility(modalState) {
       this.$store.commit('SET_MODAL_OPEN', modalState);
     },

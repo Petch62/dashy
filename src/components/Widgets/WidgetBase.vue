@@ -349,13 +349,6 @@
         @error="handleError"
         :ref="widgetRef"
       />
-      <SynologyDownload
-        v-else-if="widgetType === 'synology-download'"
-        :options="widgetOptions"
-        @loading="setLoaderState"
-        @error="handleError"
-        :ref="widgetRef"
-      />
       <SystemInfo
         v-else-if="widgetType === 'system-info'"
         :options="widgetOptions"
@@ -468,7 +461,6 @@ export default {
     SportsScores: () => import('@/components/Widgets/SportsScores.vue'),
     StatPing: () => import('@/components/Widgets/StatPing.vue'),
     StockPriceChart: () => import('@/components/Widgets/StockPriceChart.vue'),
-    SynologyDownload: () => import('@/components/Widgets/SynologyDownload.vue'),
     SystemInfo: () => import('@/components/Widgets/SystemInfo.vue'),
     TflStatus: () => import('@/components/Widgets/TflStatus.vue'),
     WalletBalance: () => import('@/components/Widgets/WalletBalance.vue'),

@@ -46,7 +46,6 @@ Dashy has support for displaying dynamic content in the form of widgets. There a
   - [Pi Hole Queries](#pi-hole-queries)
   - [Recent Traffic](#recent-traffic)
   - [Stat Ping Statuses](#stat-ping-statuses)
-  - [Synology Download Station](#synology-download-station)
 - **[System Resource Monitoring](#system-resource-monitoring)**
   - [CPU Usage Current](#current-cpu-usage)
   - [CPU Usage Per Core](#cpu-usage-per-core)
@@ -97,7 +96,6 @@ A simple, live-updating time and date widget with time-zone support. All fields 
 **`format`** | `string` | _Optional_ | A country code for displaying the date and time in local format.<br>Specified as `[ISO-3166]-[ISO-639]`, for example: `en-AU`. See [here](https://www.fincher.org/Utilities/CountryLanguageList.shtml) for a full list of locales. Defaults to the browser / device's region
 **`customCityName`** | `string` |  _Optional_ | By default the city from the time-zone is shown, but setting this value will override that text
 **`hideDate`** | `boolean` |  _Optional_ | If set to `true`, the date and city will not be shown. Defaults to `false`
-**`hideSeconds`** | `boolean` |  _Optional_ | If set to `true`, seconds will not be shown. Defaults to `false`
 
 ##### Example
 
@@ -714,7 +712,6 @@ Show recent scores and upcoming matches from your favourite sports team. Data is
 **`pastOrFuture`** | `string` |  __Optional__ | Set to `past` to show scores for recent games, or `future` to show upcoming games. Defaults to `past`. You can change this within the UI
 **`apiKey`** | `string` | __Optional__ | Optionally specify your API key, which you can sign up for at [TheSportsDB.com](https://www.thesportsdb.com/)
 **`limit`** | `number` | __Optional__ | To limit output to a certain number of matches, defaults to `15`
-**`hideImage`** | `boolean` | __Optional__ | Set to `true` to not render the team / match banner image, defaults to `false`
 
 ##### Example
 
@@ -1082,8 +1079,6 @@ _No config options._
 ##### Info
 No external data requests made
 
-Note that this widget is not available if you are running Dashy in a container or VM. Instead you can use the [System Monitoring](#system-resource-monitoring) widgets to display stats from the host system instead.
-
 ---
 
 ### Cron Monitoring (Health Checks)
@@ -1327,41 +1322,6 @@ Displays the current and recent uptime of your running services, via a self-host
 - **Price**: 🟢 Free
 - **Host**: Self-Hosted (see [GitHub - StatPing](https://github.com/statping/statping))
 - **Privacy**: _See [StatPing Docs](https://docs.statping.com/)_
-
----
-
-### Synology Download Station
-
-Displays the current downloads/torrents tasks of your Synology NAS
-
-<p align="center"><img width="300" src="https://i.ibb.co/N2kKWTN/image.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`hostname`** | `string` |  Required | The URL to your Synology NAS, without a trailing slash
-**`username`** | `string` |  Required | The username of a user on your synology NAS. You will see only this user download station tasks if he is not part of the administrator group. Currently don't support OTP protected accounts.
-**`password`** | `string` |  Required | The password of the account specified above.
-
-##### Example 
-
-```yaml
-- type: synology-download
-  options:
-    hostname: http://192.168.1.1:8080
-    username: dashy
-    password: totally-secure-password
-
-
-```
-
-##### Info
-- **CORS**: 🟠 Proxied
-- **Auth**: 🟢 Required
-- **Price**: 🟢 Free
-- **Host**: Self-Hosted (see [Synology](https://www.synology.com/en-us))
-- **Privacy**: _See [Synology Privacy Statement](https://www.synology.com/en-us/company/legal/privacy)_
 
 ---
 
