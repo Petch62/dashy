@@ -5,6 +5,29 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "pages": {
+      "title": "Page List",
+      "type": "array",
+      "description": "List of additional config files to load as extra pages",
+      "items": {
+        "title": "Pages",
+        "type": "object",
+        "required": ["name", "path"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "description": "Unique page identifier"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string",
+            "description": "The file name, or path. If in public directory, use just `file-name.yml`"
+          }
+        }
+      }
+    },
     "pageInfo": {
       "type": "object",
       "properties": {
@@ -36,6 +59,18 @@
               },
               "path": {
                 "type": "string"
+              },
+              "target": {
+                "title": "Opening Method",
+                "type": "string",
+                "enum": [
+                  "newtab",
+                  "sametab",
+                  "parent",
+                  "top"
+                ],
+                "default": "newtab",
+                "description": "Where / how the item is opened when it's clicked"
               }
             }
           }
@@ -284,7 +319,13 @@
           "title": "Enable Font-Awesome?",
           "type": "boolean",
           "default": true,
-          "description": "Should load font-awesome assets"
+          "description": "If true, font-awesome will be loaded, if false they will not be. If left empty, icons will only be loaded if needed"
+        },
+        "enableMaterialDesignIcons": {
+          "title": "Enable Material Design Icons?",
+          "type": "boolean",
+          "default": false,
+          "description": "If true, material-design-icons will be loaded, if false they will not be. If left empty, icons will only be loaded if needed"
         },
         "fontAwesomeKey": {
           "title": "Font-Awesome API Key",
@@ -434,6 +475,11 @@
                   "title": "Client ID",
                   "type": "string",
                   "description": "The Client ID of the client you created for use with Dashy"
+                },
+                "legacySupport": {
+                  "title": "Legacy Support",
+                  "type": "boolean",
+                  "description": "If using Keycloak 17 or older, then set this to true"
                 }
               }
             }
@@ -732,6 +778,90 @@
                   "type": "string",
                   "description": "The destination to navigate to when item is clicked, expressed as a valid URL, IP or hostname"
                 },
+                "displayData": {
+                  "title": "Display Data",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "Optional meta data for customizing an item",
+                  "properties": {
+                    "hideForUsers": {
+                      "title": "Hide for Users",
+                      "type": "array",
+                      "description": "Item will be visible to all users, except for those specified in this list",
+                      "items": {
+                        "type": "string",
+                        "description": "Username for the user that will not be able to view this item"
+                      }
+                    },
+                    "showForUsers": {
+                      "title": "Show for Users",
+                      "type": "array",
+                      "description": "Item will be hidden from all users, except for those specified in this list",
+                      "items": {
+                        "type": "string",
+                        "description": "Username for the user that will have access to this item"
+                      }
+                    },
+                    "hideForGuests": {
+                      "title": "Hide for Guests?",
+                      "type": "boolean",
+                      "default": false,
+                      "description": "If set to true, item will be visible for logged in users, but not for guests"
+                    },
+                    "showForKeycloakUsers": {
+                      "title": "Show for select Keycloak groups or roles",
+                      "type": "object",
+                      "description": "Configure the Keycloak groups or roles that will have access to this item",
+                      "additionalProperties": false,
+                      "properties": {
+                        "groups": {
+                          "title": "Show for Groups",
+                          "type": "array",
+                          "description": "Item will be hidden from all users except those with one or more of these groups",
+                          "items": {
+                            "type": "string",
+                            "description": "Name of the group that will be able to view this item"
+                          }
+                        },
+                        "roles": {
+                          "title": "Show for Roles",
+                          "type": "array",
+                          "description": "Item will be hidden from all users except those with one or more of these roles",
+                          "items": {
+                            "type": "string",
+                            "description": "Name of the role that will be able to view this item"
+                          }
+                        }
+                      }
+                    },
+                    "hideForKeycloakUsers": {
+                      "title": "Hide for select Keycloak groups or roles",
+                      "type": "object",
+                      "description": "Configure the Keycloak groups or roles that will not have access to this item",
+                      "additionalProperties": false,
+                      "properties": {
+                        "groups": {
+                          "title": "Hide for Groups",
+                          "type": "array",
+                          "description": "Item will be hidden from users with any of these groups",
+                          "items": {
+                            "type": "string",
+                            "description": "name of the group that will not be able to view this item"
+                          }
+                        },
+                        "roles": {
+                          "title": "Hide for Roles",
+                          "type": "array",
+                          "description": "Item will be hidden from users with any of roles",
+                          "items": {
+                            "type": "string",
+                            "description": "name of the role that will not be able to view this item"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
                 "target": {
                   "title": "Opening Method",
                   "type": "string",
@@ -789,10 +919,15 @@
                   "description": "Allows for running status checks on insecure content/ non-HTTPS apps. Prevents checks failing for non-SSL sites"
                 },
                 "statusCheckAcceptCodes": {
-                  "title": "Accepted HTTP Status Codes",
+                  "title": "Status Check - Accepted HTTP Codes",
                   "type": "string",
-                  "default": "",
                   "description": "If your service's response code is anything other than 2xx, then you can opt to specify an alternative success code"
+                },
+                "statusCheckMaxRedirects": {
+                  "title": "Status Check - Max Redirects",
+                  "type": "number",
+                  "default": "0",
+                  "description": "If your service redirects to another page, and you would like status checks to follow redirects, then specify the maximum number of redirects here"
                 },
                 "color": {
                   "title": "Custom Color",
@@ -803,6 +938,15 @@
                   "title": "Item ID",
                   "type": "string",
                   "description": "Unique ID for each item. Generated automatically, shouldn't need to be set manually."
+                },
+                "subItems": {
+                  "title": "Sub-Items",
+                  "type": "array",
+                  "description": "List of sub-items",
+                  "items": {
+                    "type": "object",
+                    "properties": {}
+                  }
                 }
               }
             }
@@ -819,6 +963,21 @@
                   "title": "Widget Type",
                   "type": "string",
                   "description": "The type of widget to use, see docs for supported options"
+                },
+                "updateInterval": {
+                  "title": "Update Interval",
+                  "type": "number",
+                  "description": "Specified in seconds. If set, widget data will be re-retched at this interval to display up-to-date data"
+                },
+                "timeout": {
+                  "title": "Timeout",
+                  "type": "number",
+                  "description": "Specified in milliseconds. If set, request will timeout after the specified interval. Defaults to 500/ half a sec"
+                },
+                "useProxy": {
+                  "title": "Use Proxy?",
+                  "type": "boolean",
+                  "description": "If set to true, request will be proxied through the backend. Requires the Node server to be running"
                 },
                 "options": {
                   "title": "Widget Options",

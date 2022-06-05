@@ -20,8 +20,36 @@
     </div>
     <!-- Widget -->
     <div :class="`widget-wrap ${ error ? 'has-error' : '' }`">
+      <AdGuardDnsInfo
+        v-if="widgetType === 'adguard-dns-info'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
+      <AdGuardFilterStatus
+        v-else-if="widgetType === 'adguard-filter-status'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
+      <AdGuardStats
+        v-else-if="widgetType === 'adguard-stats'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
+      <AdGuardTopDomains
+        v-else-if="widgetType === 'adguard-top-domains'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
       <AnonAddy
-        v-if="widgetType === 'anonaddy'"
+        v-else-if="widgetType === 'anonaddy'"
         :options="widgetOptions"
         @loading="setLoaderState"
         @error="handleError"
@@ -29,6 +57,13 @@
       />
       <Apod
         v-else-if="widgetType === 'apod'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
+      <BlacklistCheck
+        v-else-if="widgetType === 'blacklist-check'"
         :options="widgetOptions"
         @loading="setLoaderState"
         @error="handleError"
@@ -57,6 +92,13 @@
       />
       <CveVulnerabilities
         v-else-if="widgetType === 'cve-vulnerabilities'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
+      <DomainMonitor
+        v-else-if="widgetType === 'domain-monitor'"
         :options="widgetOptions"
         @loading="setLoaderState"
         @error="handleError"
@@ -244,6 +286,13 @@
         @error="handleError"
         :ref="widgetRef"
       />
+      <MullvadStatus
+        v-else-if="widgetType === 'mullvad-status'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
       <NdCpuHistory
         v-else-if="widgetType === 'nd-cpu-history'"
         :options="widgetOptions"
@@ -335,6 +384,13 @@
         @error="handleError"
         :ref="widgetRef"
       />
+      <SynologyDownload
+        v-else-if="widgetType === 'synology-download'"
+        :options="widgetOptions"
+        @loading="setLoaderState"
+        @error="handleError"
+        :ref="widgetRef"
+      />
       <SystemInfo
         v-else-if="widgetType === 'system-info'"
         :options="widgetOptions"
@@ -400,14 +456,20 @@ export default {
     OpenIcon,
     LoadingAnimation,
     // Register widget components
+    AdGuardDnsInfo: () => import('@/components/Widgets/AdGuardDnsInfo.vue'),
+    AdGuardFilterStatus: () => import('@/components/Widgets/AdGuardFilterStatus.vue'),
+    AdGuardStats: () => import('@/components/Widgets/AdGuardStats.vue'),
+    AdGuardTopDomains: () => import('@/components/Widgets/AdGuardTopDomains.vue'),
     AnonAddy: () => import('@/components/Widgets/AnonAddy.vue'),
     Apod: () => import('@/components/Widgets/Apod.vue'),
+    BlacklistCheck: () => import('@/components/Widgets/BlacklistCheck.vue'),
     Clock: () => import('@/components/Widgets/Clock.vue'),
     CodeStats: () => import('@/components/Widgets/CodeStats.vue'),
     CovidStats: () => import('@/components/Widgets/CovidStats.vue'),
     CryptoPriceChart: () => import('@/components/Widgets/CryptoPriceChart.vue'),
     CryptoWatchList: () => import('@/components/Widgets/CryptoWatchList.vue'),
     CveVulnerabilities: () => import('@/components/Widgets/CveVulnerabilities.vue'),
+    DomainMonitor: () => import('@/components/Widgets/DomainMonitor.vue'),
     EmbedWidget: () => import('@/components/Widgets/EmbedWidget.vue'),
     EthGasPrices: () => import('@/components/Widgets/EthGasPrices.vue'),
     ExchangeRates: () => import('@/components/Widgets/ExchangeRates.vue'),
@@ -432,6 +494,7 @@ export default {
     IframeWidget: () => import('@/components/Widgets/IframeWidget.vue'),
     ImageWidget: () => import('@/components/Widgets/ImageWidget.vue'),
     Jokes: () => import('@/components/Widgets/Jokes.vue'),
+    MullvadStatus: () => import('@/components/Widgets/MullvadStatus.vue'),
     NdCpuHistory: () => import('@/components/Widgets/NdCpuHistory.vue'),
     NdLoadHistory: () => import('@/components/Widgets/NdLoadHistory.vue'),
     NdRamHistory: () => import('@/components/Widgets/NdRamHistory.vue'),
@@ -445,6 +508,7 @@ export default {
     SportsScores: () => import('@/components/Widgets/SportsScores.vue'),
     StatPing: () => import('@/components/Widgets/StatPing.vue'),
     StockPriceChart: () => import('@/components/Widgets/StockPriceChart.vue'),
+    SynologyDownload: () => import('@/components/Widgets/SynologyDownload.vue'),
     SystemInfo: () => import('@/components/Widgets/SystemInfo.vue'),
     TflStatus: () => import('@/components/Widgets/TflStatus.vue'),
     WalletBalance: () => import('@/components/Widgets/WalletBalance.vue'),
@@ -476,10 +540,13 @@ export default {
     /* Returns users specified widget options, or empty object */
     widgetOptions() {
       const options = this.widget.options || {};
+      const timeout = this.widget.timeout || null;
       const useProxy = this.appConfig.widgetsAlwaysUseProxy || !!this.widget.useProxy;
       const updateInterval = this.widget.updateInterval !== undefined
         ? this.widget.updateInterval : null;
-      return { useProxy, updateInterval, ...options };
+      return {
+        timeout, useProxy, updateInterval, ...options,
+      };
     },
     /* A unique string to reference the widget by */
     widgetRef() {
@@ -517,6 +584,8 @@ export default {
 .widget-base {
   position: relative;
   padding: 0.75rem 0.5rem 0.5rem 0.5rem;
+  background: var(--widget-base-background);
+  box-shadow: var(--widget-base-shadow, none);
   // Refresh and full-page action buttons
   button.action-btn  {
     height: 1rem;
@@ -546,7 +615,8 @@ export default {
       cursor: not-allowed;
       opacity: 0.5;
       border-radius: var(--curve-factor);
-      background: #ffff0080;
+      background: #ffff0040;
+      &:hover { background: none; }
     }
   }
   // Error message output
