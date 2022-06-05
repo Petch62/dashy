@@ -38,9 +38,6 @@ const isDocker = !!process.env.IS_DOCKER;
 /* Checks env var for port. If undefined, will use Port 80 for Docker, or 4000 for metal */
 const port = process.env.PORT || (isDocker ? 80 : 4000);
 
-/* Checks env var for host. If undefined, will use 0.0.0.0 */
-const host = process.env.HOST || '0.0.0.0';
-
 /* Attempts to get the users local IP, used as part of welcome message */
 const getLocalIp = () => {
   const dnsLookup = util.promisify(dns.lookup);
@@ -51,7 +48,7 @@ const getLocalIp = () => {
 const printWelcomeMessage = () => {
   try {
     getLocalIp().then(({ address }) => {
-      const ip = process.env.HOST || address || 'localhost';
+      const ip = address || 'localhost';
       console.log(printMessage(ip, port, isDocker)); // eslint-disable-line no-console
     });
   } catch (e) {
@@ -69,8 +66,6 @@ const printWarning = (msg, error) => {
 const method = (m, mw) => (req, res, next) => (req.method === m ? mw(req, res, next) : next());
 
 const app = express()
-  // Load SSL redirection middleware
-  .use(sslServer.middleware)
   // Serves up static files
   .use(express.static(path.join(__dirname, 'dist')))
   .use(express.static(path.join(__dirname, 'public'), { index: 'initialization.html' }))
@@ -125,7 +120,7 @@ const app = express()
 
 /* Create HTTP server from app on port, and print welcome message */
 http.createServer(app)
-  .listen(port, host, () => {
+  .listen(port, () => {
     printWelcomeMessage();
   })
   .on('error', (err) => {
@@ -133,4 +128,4 @@ http.createServer(app)
   });
 
 /* Check, and if possible start SSL server too */
-sslServer.startSSLServer(app);
+sslServer(app);

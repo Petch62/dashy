@@ -20,7 +20,6 @@ const WidgetMixin = {
     overrideUpdateInterval: null,
     disableLoader: false, // Prevent ever showing the loader
     updater: null, // Stores interval
-    defaultTimeout: 50000,
   }),
   /* When component mounted, fetch initial data */
   mounted() {
@@ -107,9 +106,8 @@ const WidgetMixin = {
       const CustomHeaders = options || null;
       const headers = this.useProxy
         ? { 'Target-URL': endpoint, CustomHeaders: JSON.stringify(CustomHeaders) } : CustomHeaders;
-      const timeout = this.options.timeout || this.defaultTimeout;
       const requestConfig = {
-        method, url, headers, data, timeout,
+        method, url, headers, data,
       };
       // Make request
       return new Promise((resolve, reject) => {

@@ -1,7 +1,6 @@
 <template>
   <nav class="side-bar">
     <div v-for="(section, index) in sections" :key="index" class="side-bar-section">
-      <!-- Section button -->
       <div @click="openSection(index)" class="side-bar-item-container">
         <SideBarItem
           class="item"
@@ -9,16 +8,14 @@
           :title="section.name"
         />
       </div>
-      <!-- Section inner -->
       <transition name="slide">
         <SideBarSection
           v-if="isOpen[index]"
-          :items="filterTiles(section.items)"
+          :items="section.items"
           @launch-app="launchApp"
         />
       </transition>
     </div>
-    <!-- Show links for switching back to Home / Minimal views -->
     <div class="switch-view-buttons">
       <router-link to="/home">
         <IconHome class="view-icon" v-tooltip="$t('alternate-views.default')" />
@@ -36,7 +33,6 @@ import SideBarItem from '@/components/Workspace/SideBarItem.vue';
 import SideBarSection from '@/components/Workspace/SideBarSection.vue';
 import IconHome from '@/assets/interface-icons/application-home.svg';
 import IconMinimalView from '@/assets/interface-icons/application-minimal.svg';
-import { checkItemVisibility } from '@/utils/CheckItemVisibility';
 
 export default {
   name: 'SideBar',
@@ -70,20 +66,9 @@ export default {
       if (!this.initUrl) return;
       const process = (url) => (url ? url.replace(/[^\w\s]/gi, '').toLowerCase() : undefined);
       const compare = (item) => (process(item.url) === process(this.initUrl));
-      this.sections.forEach((section, secIndx) => {
-        if (!section.items) return; // Cancel if no items
-        if (section.items.findIndex(compare) !== -1) this.openSection(secIndx);
-        section.items.forEach((item) => { // Do the same for sub-items, if set
-          if (item.subItems && item.subItems.findIndex(compare) !== -1) this.openSection(secIndx);
-        });
+      this.sections.forEach((section, secIndex) => {
+        if (section.items && section.items.findIndex(compare) !== -1) this.openSection(secIndex);
       });
-    },
-    /* Return a list with visible items on a section to the user or guest */
-    filterTiles(allTiles) {
-      if (!allTiles) {
-        return [];
-      }
-      return allTiles.filter((tile) => checkItemVisibility(tile));
     },
   },
   mounted() {

@@ -27,7 +27,6 @@ The following file provides a reference of all supported configuration options.
 
 - [**`pageInfo`**](#pageinfo) - Header text, footer, title, navigation, etc
   - [`navLinks`](#pageinfonavlinks-optional) - Links to display in the navigation bar
-- [**`pages`**](#pages-optional) - List of additional config files, for multi-page dashboards
 - [**`appConfig`**](#appconfig-optional) - Main application settings
   - [`webSearch`](#appconfigwebsearch-optional) - Configure web search engine options
   - [`hideComponents`](#appconfighidecomponents-optional) - Show/ hide page components
@@ -36,12 +35,10 @@ The following file provides a reference of all supported configuration options.
     - [`keycloak`](#appconfigauthkeycloak-optional) - Auth config for Keycloak
 - [**`sections`**](#section) - List of sections
   - [`displayData`](#sectiondisplaydata-optional) - Section display settings
-    - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-sectiondisplaydatashowforkeycloakusers-itemdisplaydatahideforkeycloakusers-and-itemdisplaydatashowforkeycloakusers) - Set user controls
+    - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-and-sectiondisplaydatashowforkeycloakusers) - Set user controls
   - [`icon`](#sectionicon-and-sectionitemicon) - Icon for a section
   - [`items`](#sectionitem) - List of items
     - [`icon`](#sectionicon-and-sectionitemicon) - Icon for an item
-    - [`displayData`](#itemdisplaydata-optional) - Item display settings
-      - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-sectiondisplaydatashowforkeycloakusers-itemdisplaydatahideforkeycloakusers-and-itemdisplaydatashowforkeycloakusers) - Set user controls
   - [`widgets`](#sectionwidget-optional) - List of widgets
 - [**Notes**](#notes)
   - [Editing Config through the UI](#editing-config-through-the-ui)
@@ -59,7 +56,6 @@ The following file provides a reference of all supported configuration options.
 **`pageInfo`** | `object` | Required | Basic meta data like title, description, nav bar links, footer text. See [`pageInfo`](#pageinfo)
 **`appConfig`** | `object` | _Optional_ | Settings related to how the app functions, including API keys and global styles. See [`appConfig`](#appconfig-optional)
 **`sections`** | `array` | Required | An array of sections, each containing an array of items, which will be displayed as links. See [`section`](#section)
-**`pages`** | `array` | _Optional_ | An array additional config files, used for multi-page dashboards. See [`pages`](#pages-optional)
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -81,16 +77,6 @@ The following file provides a reference of all supported configuration options.
 --- | --- | --- | ---
 **`title`** | `string` |  Required | The text to display on the link button
 **`path`** | `string` | Required | The URL to navigate to when clicked. Can be relative (e.g. `/about`) or absolute (e.g. `https://example.com` or `http://192.168.1.1`)
-**`target`** | `string` |  _Optional_ | The opening method (external links only). Can be either `newtab`, `sametab`, `top` or `parent`. Defaults to `newtab`
-
-**[⬆️ Back to Top](#configuring)**
-
-### `pages[]` _(optional)_
-
-**Field** | **Type** | **Required**| **Description**
---- | --- | --- | ---
-**`name`** | `string` |  Required | A unique name for that page
-**`path`** | `string` |  Required | The path (local or remote) to the config file to use.<br>For files located within `/public`, you only need to specify filename, for externally hosted files you must include the full URL
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -105,8 +91,7 @@ The following file provides a reference of all supported configuration options.
 **`statusCheckInterval`** | `boolean` | _Optional_ | The number of seconds between checks. If set to `0` then service will only be checked on initial page load, which is usually the desired functionality. If value is less than `10` you may experience a hit in performance. Defaults to `0`
 **`webSearch`** | `object` | _Optional_ | Configuration options for the web search feature, set your default search engine, opening method or disable web search. See [`webSearch`](#appconfigwebsearch-optional)
 **`backgroundImg`** | `string` | _Optional_ | Path to an optional full-screen app background image. This can be either remote (http) or local (/). Note that this will slow down initial load
-**`enableFontAwesome`** | `boolean` | _Optional_ | If set to `true` font-awesome will be loaded, if set to `false` they will not be. if left blank font-awesome will be enabled only if required by 1 or more icons
-**`enableMaterialDesignIcons`** | `boolean` | _Optional_ | If set to `true` mdi icons will be loaded, if set to `false` they will not be. Where `true` is enabled, if left blank material design icons will be enabled only if required by 1 or more icons
+**`enableFontAwesome`** | `boolean` | _Optional_ | Where `true` is enabled, if left blank font-awesome will be enabled only if required by 1 or more icons
 **`fontAwesomeKey`** | `string` | _Optional_ | If you have a font-awesome key, then you can use it here and make use of premium icons. It is a 10-digit alpha-numeric string from you're FA kit URL  (e.g. `13014ae648`)
 **`faviconApi`** | `enum` | _Optional_ | Only applicable if you are using favicons for item icons. Specifies which service to use to resolve favicons. Set to `local` to do this locally, without using an API. Services running locally will use this option always. Available options are: `local`, `faviconkit`, `iconhorse`, `google`, `clearbit`, `webmasterapi` and `allesedv`. Defaults to `faviconkit`. See [Icons](/docs/icons.md#favicons) for more info
 **`auth`** | `object` | _Optional_ | All settings relating to user authentication. See [`auth`](#appconfigauth-optional)
@@ -165,7 +150,6 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 **`serverUrl`** | `string` | Required | The URL (or URL/ IP + Port) where your keycloak server is running
 **`realm`** | `string` | Required | The name of the realm (must already be created) that you want to use
 **`clientId`** | `string` | Required | The Client ID of the client you created for use with Dashy
-**`legacySupport`** | `boolean` | _Optional_ | If using Keycloak 17 or older, then set this to `true`
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -222,27 +206,11 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 **`statusCheckHeaders`** | `object` | _Optional_ | If you're endpoint requires any specific headers for the status checking, then define them here 
 **`statusCheckAllowInsecure`** | `boolean` | _Optional_ | By default, any request to insecure content will be blocked. Setting this option to `true` will disable the `rejectUnauthorized` option, enabling you to ping non-HTTPS services for the current item. Defaults to `false`
 **`statusCheckAcceptCodes`** | `string` | _Optional_ | If your service's response code is anything other than 2xx, then you can opt to specify an alternative success code. E.g. if you expect your server to return 403, but still want the status indicator to be green, set this value to `403`
-**`statusCheckMaxRedirects`** | `number` | _Optional_ | If your service redirects to another page, and you would like status checks to follow redirects, then specify the maximum number of redirects here. Defaults to `0` / will not follow redirects
 **`color`** | `string` | _Optional_ | An optional color for the text and font-awesome icon to be displayed in. Note that this will override the current theme and so may not display well
 **`backgroundColor`** | `string` | _Optional_ | An optional background fill color for the that given item. Again, this will override the current theme and so might not display well against the background
 **`provider`** | `string` | _Optional_ | The name of the provider for a given service, useful for when including hosted apps. In some themes, this is visible under the item name
-**`displayData`** | `object` | _Optional_ | Meta-data to optionally overide display settings for a given item. See [`displayData`](#itemdisplaydata-optional)
 
 **[⬆️ Back to Top](#configuring)**
-
-
-### `item.displayData` _(optional)_
-
-**Field** | **Type** | **Required**| **Description**
---- | --- | --- | ---
-**`hideForUsers`** | `string[]` | _Optional_ | Current item will be visible to all users, except for those specified in this list
-**`showForUsers`** | `string[]` | _Optional_ | Current item will be hidden from all users, except for those specified in this list
-**`hideForGuests`** | `boolean` | _Optional_ | Current item will be visible for logged in users, but not for guests (see `appConfig.enableGuestAccess`). Defaults to `false`
-**`hideForKeycloakUsers`** | `object`  | _Optional_ | Current item will be visible to all keycloak users, except for those configured via these groups and roles. See `hideForKeycloakUsers`
-**`showForKeycloakUsers`** | `object`  | _Optional_ | Current item will be hidden from all keycloak users, except for those configured via these groups and roles. See `showForKeycloakUsers`
-
-**[⬆️ Back to Top](#configuring)**
-
 
 ### `section.widget` _(optional)_
 
@@ -252,7 +220,6 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 **`options`** | `object` | _Optional_ | Some widgets accept either optional or required additional options. Again, see the [Widget Docs](/docs/widgets.md) for full list of options
 **`updateInterval`** | `number` | _Optional_ | You can keep a widget constantly updated by specifying an update interval, in seconds. See [Continuous Updates Docs](/docs/widgets.md#continuous-updates) for more info
 **`useProxy`** | `boolean` | _Optional_ | Some widgets make API requests to services that are not CORS-enabled. For these instances, you will need to route requests through a proxy, Dashy has a built in CORS-proxy, which you can use by setting this option to `true`. Defaults to `false`. See the [Proxying Requests Docs](/docs/widgets.md#proxying-requests) for more info
-**`timeout`** | `number` | _Optional_ | Request timeout in milliseconds, defaults to ½ a second (`500`)
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -276,7 +243,7 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 **`showForUsers`** | `string[]` | _Optional_ | Current section will be hidden from all users, except for those specified in this list
 **`hideForGuests`** | `boolean` | _Optional_ | Current section will be visible for logged in users, but not for guests (see `appConfig.enableGuestAccess`). Defaults to `false`
 **`hideForKeycloakUsers`** | `object`  | _Optional_ | Current section will be visible to all keycloak users, except for those configured via these groups and roles. See `hideForKeycloakUsers`
-**`showForKeycloakUsers`** | `object`  | _Optional_ | Current section will be hidden from all keycloak users, except for those configured via these groups and roles. See `showForKeycloakUsers`
+**`showForKeycloakUsers`** | `object`  | _Optional_ | Current section will be hidden from all keyclaok users, except for those configured via these groups and roles. See `showForKeycloakUsers`
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -288,12 +255,12 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 
 **[⬆️ Back to Top](#configuring)**
 
-### `section.displayData.hideForKeycloakUsers`, `section.displayData.showForKeycloakUsers`, `item.displayData.hideForKeycloakUsers` and `item.displayData.showForKeycloakUsers`
+### `section.displayData.hideForKeycloakUsers` and `section.displayData.showForKeycloakUsers`
 
 **Field** | **Type**   | **Required**| **Description**
 --- |------------| --- | ---
-**`groups`** | `string[]` | _Optional_ | Current Section or Item will be hidden or shown based on the user having any of the groups in this list
-**`roles`** | `string[]` | _Optional_ | Current Section or Item will be hidden or shown based on the user having any of the roles in this list
+**`groups`** | `string[]` | _Optional_ | Current Section will be hidden or shown based on the user having any of the groups in this list
+**`roles`** | `string[]` | _Optional_ | Current Section will be hidden or shown based on the user having any of the roles in this list
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -329,7 +296,7 @@ When updating the config through the JSON editor in the UI, you have two save op
 
 If you have authentication set up, then any user who is not an admin (with `type: admin`) will not be able to write changes to disk.
 
-You can also prevent changes from any user being written to disk, using `preventWriteToDisk`. Or prevent any changes from being saved locally in browser storage, using `preventLocalSave`.
+You can also prevent changes fro any user being written to disk, using `preventWriteToDisk`. Or prevent any changes from being saved locally in browser storage, using `preventLocalSave`.
 
 To disable all UI config features, set `disableConfiguration`.
 

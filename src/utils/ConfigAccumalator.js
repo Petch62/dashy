@@ -14,42 +14,30 @@ import {
 } from '@/utils/defaults';
 import ErrorHandler from '@/utils/ErrorHandler';
 import { applyItemId } from '@/utils/SectionHelpers';
-import $store from '@/store';
-
-import buildConf from '../../public/conf.yml';
+import conf from '../../public/conf.yml';
 
 export default class ConfigAccumulator {
   constructor() {
-    this.conf = $store.state.remoteConfig;
-  }
-
-  pages() {
-    return this.conf.pages;
+    this.conf = conf;
   }
 
   /* App Config */
   appConfig() {
     let appConfigFile = {};
     // Set app config from file
-    if (this.conf && this.conf.appConfig) {
-      appConfigFile = this.conf.appConfig;
-    } else if (buildConf && buildConf.appConfig) {
-      appConfigFile = buildConf.appConfig;
-    }
+    if (this.conf) appConfigFile = this.conf.appConfig || {};
     // Fill in defaults if anything missing
     let usersAppConfig = defaultAppConfig;
     if (localStorage[localStorageKeys.APP_CONFIG]) {
       usersAppConfig = JSON.parse(localStorage[localStorageKeys.APP_CONFIG]);
-    } else if (Object.keys(appConfigFile).length > 0) {
+    } else if (appConfigFile !== {}) {
       usersAppConfig = appConfigFile;
     }
     // Some settings have their own local storage keys, apply them here
     usersAppConfig.layout = localStorage[localStorageKeys.LAYOUT_ORIENTATION]
-      || appConfigFile.layout
-      || defaultLayout;
+      || appConfigFile.layout || defaultLayout;
     usersAppConfig.iconSize = localStorage[localStorageKeys.ICON_SIZE]
-      || appConfigFile.iconSize
-      || defaultIconSize;
+      || appConfigFile.iconSize || defaultIconSize;
     // Don't let users modify users locally
     if (appConfigFile.auth) usersAppConfig.auth = appConfigFile.auth;
     // All done, return final appConfig object
@@ -64,7 +52,7 @@ export default class ConfigAccumulator {
       try { localPageInfo = JSON.parse(localStorage[localStorageKeys.PAGE_INFO]); }
       catch (e) { ErrorHandler('Malformed pageInfo data in local storage'); }
     }
-    const filePageInfo = (this.conf && this.conf.pageInfo) ? this.conf.pageInfo : {};
+    const filePageInfo = this.conf ? this.conf.pageInfo || {} : {};
     return { ...defaultPageInfo, ...filePageInfo, ...localPageInfo };
   }
 
@@ -96,7 +84,6 @@ export default class ConfigAccumulator {
       appConfig: this.appConfig(),
       pageInfo: this.pageInfo(),
       sections: this.sections(),
-      pages: this.pages(),
     };
   }
 }

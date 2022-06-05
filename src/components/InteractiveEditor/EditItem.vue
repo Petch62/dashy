@@ -231,8 +231,8 @@ export default {
       const newItem = item;
       newItem.id = this.itemId;
       if (newItem.hotkey) newItem.hotkey = parseInt(newItem.hotkey, 10);
-      const strToTags = (tags) => {
-        const tagArr = (typeof tags === 'string') ? tags.split(',') : tags;
+      const strToTags = (str) => {
+        const tagArr = str.split(',');
         return tagArr.map((tag) => tag.trim().toLowerCase().replace(/[^a-z0-9]+/, ''));
       };
       const strToBool = (str) => {

@@ -2,6 +2,10 @@
 
 Dashy has support for displaying dynamic content in the form of widgets. There are several built-in widgets available out-of-the-box as well as support for custom widgets to display stats from almost any service with an API.
 
+> ℹ️ **Note**: Widgets are still in the Alpha-phase of development.
+> If you find a bug, please raise it.<br>
+> Adding / editing widgets through the UI isn't yet supported, you will need to do this in the YAML config file.
+
 ##### Contents
 - **[General Widgets](#general-widgets)**
   - [Clock](#clock)
@@ -10,13 +14,10 @@ Dashy has support for displaying dynamic content in the form of widgets. There a
   - [RSS Feed](#rss-feed)
   - [Image](#image)
   - [Public IP Address](#public-ip)
-  - [IP Blacklist Checker](#ip-blacklist)
-  - [Domain Monitor](#domain-monitor)
   - [Crypto Watch List](#crypto-watch-list)
   - [Crypto Price History](#crypto-token-price-history)
   - [Crypto Wallet Balance](#wallet-balance)
   - [Code Stats](#code-stats)
-  - [Mullvad Status](#mullvad-status)
   - [Email Aliases (AnonAddy)](#anonaddy)
   - [Vulnerability Feed](#vulnerability-feed)
   - [Exchange Rates](#exchange-rates)
@@ -43,11 +44,6 @@ Dashy has support for displaying dynamic content in the form of widgets. There a
   - [Pi Hole Queries](#pi-hole-queries)
   - [Recent Traffic](#recent-traffic)
   - [Stat Ping Statuses](#stat-ping-statuses)
-  - [Synology Download Station](#synology-download-station)
-  - [AdGuard Home Block Stats](#adguard-home-block-stats)
-  - [AdGuard Home Filters](#adguard-home-filters)
-  - [AdGuard Home DNS Info](#adguard-home-dns-info)
-  - [AdGuard Home Top Domains](#adguard-home-top-domains)
 - **[System Resource Monitoring](#system-resource-monitoring)**
   - [CPU Usage Current](#current-cpu-usage)
   - [CPU Usage Per Core](#cpu-usage-per-core)
@@ -73,7 +69,6 @@ Dashy has support for displaying dynamic content in the form of widgets. There a
   - [Widget Usage Guide](#widget-usage-guide)
   - [Continuous Updates](#continuous-updates)
   - [Proxying Requests](#proxying-requests)
-  - [Setting Timeout](#setting-timeout)
   - [Custom CSS Styling](#widget-styling)
   - [Customizing Charts](#customizing-charts)
   - [Language Translations](#language-translations)
@@ -98,7 +93,6 @@ A simple, live-updating time and date widget with time-zone support. All fields 
 **`format`** | `string` | _Optional_ | A country code for displaying the date and time in local format.<br>Specified as `[ISO-3166]-[ISO-639]`, for example: `en-AU`. See [here](https://www.fincher.org/Utilities/CountryLanguageList.shtml) for a full list of locales. Defaults to the browser / device's region
 **`customCityName`** | `string` |  _Optional_ | By default the city from the time-zone is shown, but setting this value will override that text
 **`hideDate`** | `boolean` |  _Optional_ | If set to `true`, the date and city will not be shown. Defaults to `false`
-**`hideSeconds`** | `boolean` |  _Optional_ | If set to `true`, seconds will not be shown. Defaults to `false`
 
 ##### Example
 
@@ -290,74 +284,6 @@ Or
 
 ---
 
-### IP Blacklist
-
-Notice certain web pages aren't loading? This widget quickly shows which blacklists your IP address (or host, or email) appears on, using data from [blacklistchecker.com](https://blacklistchecker.com/).
-
-<p align="center"><img width="600" src="https://i.ibb.co/hX0fp5Z/ip-blacklist.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`ipAddress`** | `string` |  _Optional_ | The IP to check. This can also be a domain/ host name or even an email address. If left blank, Dashy will use your current public IP address.
-**`apiKey`** | `string` |  Required | You can get your free API key from [blacklistchecker.com](https://blacklistchecker.com/keys)
-
-##### Example 
-
-```yaml
-- type: blacklist-check
-  options:
-    apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    ipAddress: 1.1.1.1
-```
-
-##### Info
-- **CORS**: 🟢 Enabled
-- **Auth**: 🔴 Required
-- **Price**: 🟠 Free Plan
-- **Host**: Managed Instance Only
-- **Privacy**: _See [BlacklistChecker Privacy Policy](https://blacklistchecker.com/privacy)_
-
----
-
-### Domain Monitor
-
-Keep an eye on the expiry dates of your domain names, using public whois records fetched from [whoapi.com](https://whoapi.com/). Click the domain name to view additional info, like registrar, name servers and date last updated.
-
-<p align="center"><img width="600" src="https://i.ibb.co/7XjByG9/domain-monitor.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`domain`** | `string` |  Required | The domain to check
-**`apiKey`** | `string` |  Required | You can get your free API key from [my.whoapi.com](https://my.whoapi.com/user/signup)
-**`showFullInfo`** | `boolean` |  _Optional_ | If set to true, the toggle-full-info panel will be open by default
-
-##### Example 
-
-```yaml
-  - type: domain-monitor
-    options:
-      domain: example.com
-      apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  - type: domain-monitor
-    options:
-      domain: example2.com
-      apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-##### Info
-- **CORS**: 🟢 Enabled
-- **Auth**: 🔴 Required
-- **Price**: 🟠 Free Plan (10,000 requests)
-- **Host**: Managed Instance Only
-- **Privacy**: _See [WhoAPI Privacy Policy](https://whoapi.com/privacy-policy/)_
-
----
-
 ### Crypto Watch List
 
 Keep track of price changes of your favorite crypto assets. Data is fetched from [CoinGecko](https://www.coingecko.com/). All fields are optional.
@@ -503,31 +429,6 @@ Display your coding summary. [Code::Stats](https://codestats.net/) is a free and
 - **Price**: 🟢 Free
 - **Host**: Self-Hosted or Managed
 - **Privacy**: _See [Code::Stats Privacy Policy](https://codestats.net/tos#privacy)_
-
----
-
-### Mullvad Status
-
-Shows your Mullvad VPN connection status, as well as server info. Fetched from [am.i.mullvad.net](https://mullvad.net/en/check/)
-
-<p align="center"><img width="400" src="https://i.ibb.co/3BCb2YV/mullvad-check.png" /></p>
-
-##### Options
-
-_No Options_
-
-##### Example
-
-```yaml
-- type: mullvad-status
-```
-
-##### Info
-- **CORS**: 🟢 Enabled
-- **Auth**: 🟢 Not Required
-- **Price**: 🟢 Free
-- **Host**: Managed
-- **Privacy**: _See [Mullvad Privacy Policy](https://mullvad.net/en/help/privacy-policy/)_
 
 ---
 
@@ -752,7 +653,6 @@ Show recent scores and upcoming matches from your favourite sports team. Data is
 **`pastOrFuture`** | `string` |  __Optional__ | Set to `past` to show scores for recent games, or `future` to show upcoming games. Defaults to `past`. You can change this within the UI
 **`apiKey`** | `string` | __Optional__ | Optionally specify your API key, which you can sign up for at [TheSportsDB.com](https://www.thesportsdb.com/)
 **`limit`** | `number` | __Optional__ | To limit output to a certain number of matches, defaults to `15`
-**`hideImage`** | `boolean` | __Optional__ | Set to `true` to not render the team / match banner image, defaults to `false`
 
 ##### Example
 
@@ -1120,8 +1020,6 @@ _No config options._
 ##### Info
 No external data requests made
 
-Note that this widget is not available if you are running Dashy in a container or VM. Instead you can use the [System Monitoring](#system-resource-monitoring) widgets to display stats from the host system instead.
-
 ---
 
 ### Cron Monitoring (Health Checks)
@@ -1368,187 +1266,6 @@ Displays the current and recent uptime of your running services, via a self-host
 
 ---
 
-### Synology Download Station
-
-Displays the current downloads/torrents tasks of your Synology NAS
-
-<p align="center"><img width="500" src="https://i.ibb.co/N2kKWTN/image.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`hostname`** | `string` |  Required | The URL to your Synology NAS, without a trailing slash
-**`username`** | `string` |  Required | The username of a user on your synology NAS. You will see only this user download station tasks if he is not part of the administrator group. Currently don't support OTP protected accounts.
-**`password`** | `string` |  Required | The password of the account specified above.
-
-##### Example 
-
-```yaml
-- type: synology-download
-  options:
-    hostname: http://192.168.1.1:8080
-    username: dashy
-    password: totally-secure-password
-
-
-```
-
-##### Info
-- **CORS**: 🟠 Proxied
-- **Auth**: 🟢 Required
-- **Price**: 🟢 Free
-- **Host**: Self-Hosted (see [Synology](https://www.synology.com/en-us))
-- **Privacy**: _See [Synology Privacy Statement](https://www.synology.com/en-us/company/legal/privacy)_
-
----
-
-### AdGuard Home Block Stats
-
-Fetches data from your [AdGuard Home](https://adguard.com/en/adguard-home/overview.html) instance, and
-displays total number of allowed and blocked queries, plus a pie chart showing breakdown by block type.
-
-<p align="center"><img width="400" src="https://i.ibb.co/qgkcxsN/adguard-block-percent-2.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`hostname`** | `string` |  Required | The URL to your AdGuard Home instance
-**`username`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your username here
-**`password`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your password here
-
-##### Example 
-
-```yaml
-- type: adguard-stats
-  useProxy: true
-  options:
-    hostname: http://127.0.0.1
-    username: admin
-    password: test
-```
-
-##### Info
-- **CORS**: 🟠 Proxied
-- **Auth**: 🟠 Optional
-- **Price**: 🟢 Free
-- **Host**: Self-Hosted (see [AdGuard Home](https://adguard.com/en/adguard-home/overview.html))
-- **Privacy**: _See [AdGuard Privacy Policy](https://adguard.com/en/privacy.html)_
-
-
----
-
-### AdGuard Home Filters
-
-Fetches data from your [AdGuard Home](https://adguard.com/en/adguard-home/overview.html) instance, to display the current status of each of your filter lists. Includes filter name, last updated, number of items, and a link to the list.
-
-<p align="center"><img width="400" src="https://i.ibb.co/WsJkf5g/adguard-filters-list.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`hostname`** | `string` |  Required | The URL to your AdGuard Home instance
-**`username`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your username here
-**`password`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your password here
-**`showOnOffStatusOnly`** | `boolean` |  _Optional_ | If set to `true`, will only show aggregated AdGuard filter status (on/off), instead of a list of filters
-
-##### Example 
-
-```yaml
-- type: adguard-filter-status
-  useProxy: true
-  options:
-    hostname: http://127.0.0.1
-    username: admin
-    password: test
-    showOnOffStatusOnly: false
-```
-
-##### Info
-- **CORS**: 🟠 Proxied
-- **Auth**: 🟠 Optional
-- **Price**: 🟢 Free
-- **Host**: Self-Hosted (see [AdGuard Home](https://adguard.com/en/adguard-home/overview.html))
-- **Privacy**: _See [AdGuard Privacy Policy](https://adguard.com/en/privacy.html)_
-
----
-
-### AdGuard Home DNS Info
-
-Fetches data from your [AdGuard Home](https://adguard.com/en/adguard-home/overview.html) instance, and displays the current status (Enabled / Disabled) of AdGuard DNS. Click show more to view detailed info, including upstream DNS provider, active ports, and the status of DNSSEC, EDNS CS, PTR and IPv6.
-
-<p align="center"><img width="400" src="https://i.ibb.co/G0JngBb/adguard-dns-info.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`hostname`** | `string` |  Required | The URL to your AdGuard Home instance
-**`username`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your username here
-**`password`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your password here
-**`showFullInfo`** | `boolean` |  _Optional_ | If set to `true`, the full DNS info will be shown by default, without having to click "Show Info"
-
-##### Example 
-
-```yaml
-- type: adguard-dns-info
-  useProxy: true
-  options:
-    hostname: http://127.0.0.1
-    username: admin
-    password: test
-    showFullInfo: false
-```
-
-##### Info
-- **CORS**: 🟠 Proxied
-- **Auth**: 🟠 Optional
-- **Price**: 🟢 Free
-- **Host**: Self-Hosted (see [AdGuard Home](https://adguard.com/en/adguard-home/overview.html))
-- **Privacy**: _See [AdGuard Privacy Policy](https://adguard.com/en/privacy.html)_
-
----
-
-### AdGuard Home Top Domains
-
-Fetches data from your [AdGuard Home](https://adguard.com/en/adguard-home/overview.html) instance, and displays a list of the most queried, and most blocked domains.
-
-<p align="center"><img width="600" src="https://i.ibb.co/qRhYYTk/adguard-top-domains.png" /></p>
-
-##### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`hostname`** | `string` |  Required | The URL to your AdGuard Home instance
-**`username`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your username here
-**`password`** | `string` |  _Optional_ | If you've got auth enabled on AdGuard, provide your password here
-**`limit`** | `number` |  _Optional_ | Specify the number of results to show, between `1` and `100`, defaults to `10`
-**`hideBlockedDomains`** | `boolean` |  _Optional_ | Don't show the blocked domains list (queried domains only)
-**`hideQueriedDomains`** | `boolean` |  _Optional_ | Don't show the queried domains list (blocked domains only)
-
-##### Example 
-
-```yaml
-- type: adguard-top-domains
-  useProxy: true
-  options:
-    hostname: http://127.0.0.1
-    username: admin
-    password: test
-    limit: 10
-```
-
-##### Info
-- **CORS**: 🟠 Proxied
-- **Auth**: 🟠 Optional
-- **Price**: 🟢 Free
-- **Host**: Self-Hosted (see [AdGuard Home](https://adguard.com/en/adguard-home/overview.html))
-- **Privacy**: _See [AdGuard Privacy Policy](https://adguard.com/en/privacy.html)_
-
----
-
 ## System Resource Monitoring
 
 The easiest method for displaying system info and resource usage in Dashy is with [Glances](https://nicolargo.github.io/glances/).
@@ -1572,7 +1289,6 @@ All Glance's based widgets require a `hostname`. All other parameters are option
 **`apiVersion`** | `string` |  _Optional_ | Specify an API version, defaults to V `3`. Note that support for older versions is limited
 **`limit`** | `number` |  _Optional_ | For widgets that show a time-series chart, optionally limit the number of data points returned. A higher number will show more historical results, but will take longer to load. A value between 300 - 800 is usually optimal
 
-Note that if auth is configured, requests must be proxied with `useProxy: true`
 ##### Info
 - **CORS**: 🟢 Enabled
 - **Auth**: 🟠 Optional
@@ -2006,21 +1722,6 @@ Alternativley, and more securley, you can set the auth headers on your service t
 ```
 Access-Control-Allow-Origin: https://location-of-dashy/
 Vary: Origin
-```
-
----
-
-### Setting Timeout
-
-If the endpoint you are requesting data from is slow to respond, you may see a timeout error in the console. This can easily be fixed by specifying the `timeout` property on the offending widget. This should be an integer value, in milliseconds. By default timeout is `2500` ms (2½ seconds).
-
-For example:
-
-```yaml
-- type: gl-current-cpu
-  timeout: 8000
-  options:
-    hostname: https://glances.dns-device.local
 ```
 
 ---

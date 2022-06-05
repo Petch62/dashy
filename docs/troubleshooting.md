@@ -7,15 +7,8 @@
 ### Contents
 - [Refused to Connect in Web Content View](#refused-to-connect-in-modal-or-workspace-view)
 - [404 On Static Hosting](#404-on-static-hosting)
-- [404 from Mobile Home Screen](#404-after-launch-from-mobile-home-screen)
 - [Yarn Build or Run Error](#yarn-error)
-- [Remote Config Not Loading](#remote-config-not-loading)
-- [Heap limit Allocation failed](ineffective-mark-compacts-near-heap-limit-allocation-failed)
-- [Command failed with signal "SIGKILL"](#command-failed-with-signal-sigkill)
 - [Auth Validation Error: "should be object"](#auth-validation-error-should-be-object)
-- [App Not Starting After Update to 2.0.4](#app-not-starting-after-update-to-204)
-- [Keycloak Redirect Error](#keycloak-redirect-error)
-- [Docker Directory Error](#docker-directory)
 - [Config Not Updating](#config-not-updating)
 - [Config Still not Updating](#config-still-not-updating)
 - [Styles and Assets not Updating](#styles-and-assets-not-updating)
@@ -29,22 +22,14 @@
 - [Status Checks Failing](#status-checks-failing)
 - [Diagnosing Widget Errors](#widget-errors)
 - [Fixing Widget CORS Errors](#widget-cors-errors)
-- [Weather Forecast Widget 401](#weather-forecast-widget-401)
-- [Font Awesome Icons not Displaying](#font-awesome-icons-not-displaying)
-- [Copy to Clipboard not Working](#copy-to-clipboard-not-working)
+- [Keycloak Redirect Error](#keycloak-redirect-error)
 - [How-To Open Browser Console](#how-to-open-browser-console)
 - [Git Contributions not Displaying](#git-contributions-not-displaying)
 
-
 ---
-
 ## `Refused to Connect` in Modal or Workspace View
 
-This is not an issue with Dashy, but instead caused by the target app preventing direct access through embedded elements. 
-
-As defined in [RFC-7034](https://datatracker.ietf.org/doc/html/rfc7034), for any web content to be accessed through an embedded element, it must have the [`X-Frame-Options`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options) HTTP header set to `ALLOW`. If you are getting a `Refused to Connect` error then this header is set to `DENY` (or `SAMEORIGIN` and it's on a different host). Thankfully, for self-hosted services, it is easy to set these headers.
-
-These settings are usually set in the config file for the web server that's hosting the target application, here are some examples of how to enable cross-origin access with common web servers:
+This is not an issue with Dashy, but instead caused by the target app preventing direct access through embedded elements. It can be fixed by setting the [`X-Frame-Options`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options) HTTP header set to `ALLOW [path to Dashy]` or `SAMEORIGIN`, as defined in [RFC-7034](https://datatracker.ietf.org/doc/html/rfc7034). These settings are usually set in the config file for the web server that's hosting the target application, here are some examples of how to enable cross-origin access with common web servers:
 
 ### NGINX
 In NGINX, you can use the [`add_header`](https://nginx.org/en/docs/http/ngx_http_headers_module.html) module within the app block.
@@ -74,12 +59,6 @@ In Apache, you can use the [`mod_headers`](https://httpd.apache.org/docs/current
 Header set X-Frame-Options: "ALLOW-FROM http://[dashy-location]/" 
 ```
 
-### LightHttpd
-
-```
-Content-Security-Policy: frame-ancestors 'self' https://[dashy-location]/
-```
-
 ---
 
 ## 404 On Static Hosting
@@ -89,15 +68,6 @@ If you're seeing Dashy's 404 page on initial load/ refresh, and then the main ap
 The first solution is to switch the routing mode, from HTML5 `history` mode to `hash` mode, by setting `appConfig.routingMode` to `hash`.
 
 If this works, but you wish to continue using HTML5 history mode, then a bit of extra [server configuration](/docs/management.md#web-server-configuration) is required. This is explained in more detaail in the [Vue Docs](https://router.vuejs.org/guide/essentials/history-mode.html). Once completed, you can then use `routingMode: history` again, for neater URLs.
-
----
-
-## 404 after Launch from Mobile Home Screen
-
-Similar to the above issue, if you get a 404 after using iOS's “add to Home Screen” feature, then this is caused by Vue router.
-It can be fixed by setting `appConfig.routingMode` to `hash`
-
-See also: [#628](https://github.com/Lissy93/dashy/issues/628)
 
 ---
 
@@ -116,50 +86,6 @@ If you're getting an error about scenarios, then you've likely installed the wro
 Alternatively, as a workaround, you have several options:
 - Try using [NPM](https://www.npmjs.com/get-npm) instead: So clone, cd, then run `npm install`, `npm run build` and `npm start`
 - Try using [Docker](https://www.docker.com/get-started) instead, and all of the system setup and dependencies will already be taken care of. So from within the directory, just run `docker build -t lissy93/dashy .` to build, and then use docker start to run the project, e.g: `docker run -it -p 8080:80 lissy93/dashy` (see the [deploying docs](https://github.com/Lissy93/dashy/blob/master/docs/deployment.md#deploy-with-docker) for more info)
-
----
-
-## Remote Config Not Loading
-
-If you've got a multi-page dashboard, and are hosting the additional config files yourself, then CORS rules will apply. A CORS error will look something like:
-
-```
-Access to XMLHttpRequest at 'https://example.com/raw/my-config.yml' from origin 'http://dashy.local' has been blocked by CORS policy:
-No 'Access-Control-Allow-Origin' header is present on the requested resource.
-```
-
-The solution is to add the appropriate headers onto the target server, to allow it to accept requests from the origin where you're running Dashy.
-
-If it is a remote service, that you do not have admin access to, then another option is to proxy the request. Either host your own, or use a publicly accessible service, like [allorigins.win](https://allorigins.win), e.g: `https://api.allorigins.win/raw?url=https://pastebin.com/raw/4tZpaJV5`. For git-based services specifically, there's [raw.githack.com](https://raw.githack.com/)
-
----
-
-##  Ineffective mark-compacts near heap limit Allocation failed
-
-If you see an error message, similar to:
-
-```
-<--- Last few GCs --->
-
-[61:0x74533040] 229060 ms: Mark-sweep (reduce) 127.1 (236.9) -> 127.1 (137.4) MB, 5560.7 / 0.3 ms (average mu = 0.286, current mu = 0.011) allocation failure scavenge might not succeed
-
-<--- JS stacktrace --->
-
-FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
-```
-
-
-This is likely caused by insufficient memory allocation to the container. When the container first starts up, or has to rebuild, the memory usage spikes, and if there isn't enough memory, it may terminate. This can be specified with, for example: `--memory=1024m`. For more info, see [Docker: Runtime options with Memory, CPUs, and GPUs](https://docs.docker.com/config/containers/resource_constraints/).
-
-See also: [#380](https://github.com/Lissy93/dashy/issues/380), [#350](https://github.com/Lissy93/dashy/issues/350), [#297](https://github.com/Lissy93/dashy/issues/297), [#349](https://github.com/Lissy93/dashy/issues/349), [#510](https://github.com/Lissy93/dashy/issues/510) and [#511](https://github.com/Lissy93/dashy/issues/511)
-
----
-
-## Command failed with signal "SIGKILL"
-
-In Docker, this can be caused by not enough memory. When the container first starts up, or has to rebuild, the memory usage spikes, and so a larger allocation may be required. This can be specified with, for example: `--memory=1024m`. For more info, see [Docker: Runtime options with Memory, CPUs, and GPUs](https://docs.docker.com/config/containers/resource_constraints/)
-
-See also [#624](https://github.com/Lissy93/dashy/issues/624)
 
 ---
 
@@ -185,60 +111,6 @@ auth:
   - user: xxx
     hash: xxx
 ```
-
----
-
-## App Not Starting After Update to 2.0.4
-
-Version 2.0.4 introduced changes to how the config is read, and the app is build. If you were previously mounting `/public` as a volume, then this will over-write the build app, preventing it from starting. The solution is to just pass in the file(s) / sub-directories that you need. For example:
-
-```yaml
-volumes:
-- /srv/dashy/conf.yml:/app/public/conf.yml
-- /srv/dashy/item-icons:/app/public/item-icons
-```
-
----
-
-## Keycloak Redirect Error
-
-Check the [browser's console output](#how-to-open-browser-console), if you've not set any headers, you will likely see a CORS error here, which would be the source of the issue.
-
-You need to allow Dashy to make requests to Keycloak, and Keycloak to redirect to Dashy. The way you do this depends on how you're hosting these applications / which proxy you are using, and examples can be found in the [Management Docs](/docs/management.md#setting-headers).
-
-For example, add the access control header to Keycloak, like:
-
-`Access-Control-Allow-Origin [URL-of Dashy]`
-
-Note that for requests that transport sensitive info like credentials, setting the accept header to a wildcard (`*`) is not allowed - see [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#requests_with_credentials), so you will need to specify the actual URL.
-
-You should also ensure that Keycloak is correctly configured, with a user, realm and application, and be sure that you have set a valid redirect URL in Keycloak ([screenshot](https://user-images.githubusercontent.com/1862727/148599768-db4ee4f8-72c5-402d-8f00-051d999e6267.png)).
-
-For more details on how to set headers, see the [Example Headers](/docs/management.md#setting-headers) in the management docs, or reference the documentation for your proxy.
-
-If you're running in Kubernetes, you will need to enable CORS ingress rules, see [docs](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#enable-cors), e.g:
-
-```
-nginx.ingress.kubernetes.io/cors-allow-origin: "https://dashy.example.com"
-nginx.ingress.kubernetes.io/enable-cors: "true"
-```
-
-See also: #479, #409, #507, #491, #341, #520
-
----
-
-## Docker Directory
-
-```
-Error response from daemon: OCI runtime create failed: container_linux.go:380:
-starting container process caused: process_linux.go:545: container init caused:
-rootfs_linux.go:76: mounting "/home/ubuntu/my-conf.yml" to rootfs at 
-"/app/public/conf.yml" caused: mount through procfd: not a directory: 
-unknown: Are you trying to mount a directory onto a file (or vice-versa)?
-Check if the specified host path exists and is the expected type.
-```
-
-If you get an error similar to the one above, you are mounting a directory to the config file's location, when a plain file is expected. Create a YAML file, (`touch my-conf.yml`), populate it with a sample config, then pass it as a volume: `-v ./my-local-conf.yml:/app/public/conf.yml` 
 
 ---
 
@@ -356,19 +228,12 @@ If you're serving Dashy though a CDN, instead of using the Node server or Docker
 
 ## Widget Errors
 
-#### Find Error Message
 If an error occurs when fetching or rendering results, you will see a short message in the UI. If that message doesn't addequatley explain the problem, then you can [open the browser console](/docs/troubleshooting.md#how-to-open-browser-console) to see more details.
 
-#### Check Config
 Before proceeding, ensure that if the widget requires auth your API is correct, and for custom widgets, double check that the URL and protocol is correct.
 
-#### Timeout Error
-If the error message in the console includes: `Error: timeout of 500ms exceeded`, then your Glances endpoint is slower to respond than expected. You can fix this by [setting timeout](https://github.com/Lissy93/dashy/blob/master/docs/widgets.md#setting-timeout) to a larger value. This is done on each widget, with the `timeout` attribute, and is specified in ms. E.g. `timeout: 5000` would only fail if no response is returned within 5 seconds.
-
-#### CORS error
 If the console message mentions to corss-origin blocking, then this is a CORS error, see: [Fixing Widget CORS Errors](#widget-cors-errors)
 
-#### More Info
 If you're able to, you can find more information about why the request may be failing in the Dev Tools under the Network tab, and you can ensure your endpoint is correct and working using a tool like Postman.
 
 ---
@@ -397,8 +262,6 @@ or
 Access-Control-Allow-Origin: *
 ```
 
-For more info on how to set headers, see: [Setting Headers](/docs/management.md#setting-headers) in the management docs
-
 #### Option 3 - Proxying Request
 
 You can route requests through Dashy's built-in CORS proxy. Instructions and more details can be found [here](/docs/widgets.md#proxying-requests). If you don't have control over the target origin, and you are running Dashy either through Docker, with the Node server or on Netlify, then this solution will work for you.
@@ -411,40 +274,22 @@ For testing purposes, you can use an addon, which will disable the CORS checks. 
 
 ---
 
-## Weather Forecast Widget 401
+## Keycloak Redirect Error
 
-[Weather widget](/docs/widgets.md#weather-forecast) is working fine, but you are getting a `401` for the [Weather Forecast widget](/docs/widgets.md#weather-forecast), then this is most likely an OWM API key issue.
+Firstly, ensure that in your Keycloak instance you have populated the Valid Redirect URIs field ([screenshot](https://user-images.githubusercontent.com/1862727/148599768-db4ee4f8-72c5-402d-8f00-051d999e6267.png)) with the URL to your Dashy instance.
 
-The forecasting API requires an upgraded plan. ULPT: You can get a free, premium API key by filling in [this form](https://home.openweathermap.org/students). It's a student plan, but there's no verification to check that you are still a student.
+You may need to specify CORS headers on your Keycloak instance, to allow requests coming from Dashy, e.g:
 
-A future update will be pushed out, to use a free weather forecasting API.
+```
+Access-Control-Allow-Origin: https://dashy.example.com
+```
 
----
+If you're running in Kubernetes, you will need to enable CORS ingress rules, see [docs](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#enable-cors), e.g:
 
-## Font Awesome Icons not Displaying
-
-Usually, Font Awesome will be automatically enabled if one or more of your icons are using Font-Awesome. If this is not happening, then you can always manually enable (or disable) Font Awesome by setting: [`appConfig`](/docs/configuring.md#appconfig-optional).`enableFontAwesome` to `true`.
-
-If you are trying to use a premium icon, then you must have a [Pro License](https://fontawesome.com/plans). You'll then need to specify your Pro plan API key under `appConfig.fontAwesomeKey`. You can find this key, by logging into your FA account, navigate to Account → [Kits](https://fontawesome.com/kits) → New Kit → Copy Kit Code. The code is a 10-digit alpha-numeric code, and is also visible within the new kit's URL, for example: `81e48ce079`.
-
-Be sure that you're specifying the icon category and name correctly. You're icon should look be `[category] fa-[icon-name]`. The following categories are supported: `far` _(regular)_, `fas` _(solid)_, `fal`_(light)_, `fad` _(duo-tone)_ and `fab`_(brands)_. With the exception of brands, you'll usually want all your icons to be in from same category, so they look uniform.
-
-Ensure the icon you are trying to use, is available within [FontAwesome Version 5](https://fontawesome.com/v5/search).
-
-Examples: `fab fa-raspberry-pi`, `fas fa-database`, `fas fa-server`, `fas fa-ethernet`
-
-Finally, check the [browser console](#how-to-open-browser-console) for any error messages, and raise a ticket if the issue persists.
-
----
-
-## Copy to Clipboard not Working
-
-If the copy to clipboard feature (either under Config --> Export, or Item --> Copy URL) isn't functioning as expected, first check the browser console. If you see `TypeError: Cannot read properties of undefined (reading 'writeText')` then this feature is not supported by your browser. 
-The most common reason for this, is if you not running the app over HTTPS. Copying to the clipboard requires the app to be running in a secure origin / aka have valid HTTPS cert. You can read more about this [here](https://stackoverflow.com/a/71876238/979052).
-
-As a workaround, you could either:
-- Highlight the text and copy / <kbd>Ctrl</kbd> + <kbd>C</kbd>
-- Or setup SSL - [here's a guide](https://github.com/Lissy93/dashy/blob/master/docs/management.md#ssl-certificates) on doing so
+```
+nginx.ingress.kubernetes.io/cors-allow-origin: "https://dashy.example.com"
+nginx.ingress.kubernetes.io/enable-cors: "true"
+```
 
 ---
 

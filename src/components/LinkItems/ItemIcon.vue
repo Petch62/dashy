@@ -45,11 +45,11 @@ export default {
       return this.$store.getters.appConfig;
     },
     /* Determines the type of icon */
-    iconType() {
+    iconType: function iconType() {
       return this.determineImageType(this.icon);
     },
     /* Gets the icon path, dependent on icon type */
-    iconPath() {
+    iconPath: function iconPath() {
       if (this.broken) return this.getFallbackIcon();
       return this.getIconPath(this.icon, this.url);
     },
@@ -142,13 +142,12 @@ export default {
     },
     /* Get favicon URL, for items which use the favicon as their icon */
     getFavicon(fullUrl, specificApi) {
-      const fullUrlTrue = fullUrl || '';
       const faviconApi = specificApi || this.appConfig.faviconApi || defaultFaviconApi;
-      if (this.shouldUseDefaultFavicon(fullUrlTrue) || faviconApi === 'local') { // Check if we should use local icon
-        const urlParts = fullUrlTrue.split('/');
+      if (this.shouldUseDefaultFavicon(fullUrl) || faviconApi === 'local') { // Check if we should use local icon
+        const urlParts = fullUrl.split('/');
         if (urlParts.length >= 2) return `${urlParts[0]}/${urlParts[1]}/${urlParts[2]}/${iconCdns.faviconName}`;
-      } else if (fullUrlTrue.includes('http')) { // Service is running publicly
-        const host = this.getHostName(fullUrlTrue);
+      } else if (fullUrl.includes('http')) { // Service is running publicly
+        const host = this.getHostName(fullUrl);
         const endpoint = faviconApiEndpoints[faviconApi];
         return endpoint.replace('$URL', host);
       }
@@ -177,7 +176,7 @@ export default {
     },
     /* Fetches the path of local images, from Docker container */
     getLocalImagePath(img) {
-      return `/${iconCdns.localPath}/${img}`;
+      return `${iconCdns.localPath}/${img}`;
     },
     /* Formats the URL for fetching the generative icons */
     getGenerativeIcon(url, cdn) {
@@ -224,7 +223,7 @@ export default {
     /* Called when initial icon has resulted in 404. Attempts to find new icon */
     getFallbackIcon() {
       if (this.attemptedFallback) return undefined; // If this is second attempt, then give up
-      const iconType = this.iconType || '';
+      const { iconType } = this;
       const markAsAttempted = () => { this.broken = false; this.attemptedFallback = true; };
       if (iconType.includes('favicon')) { // Specify fallback for favicon-based icons
         markAsAttempted();

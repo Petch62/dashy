@@ -36,9 +36,6 @@ export default {
       if (this.options.customCityName) return this.options.customCityName;
       return this.timeZone.split('/')[1].replaceAll('_', ' ');
     },
-    showSeconds() {
-      return !this.options.hideSeconds;
-    },
   },
   methods: {
     update() {
@@ -51,7 +48,7 @@ export default {
         timeZone: this.timeZone,
         hour: 'numeric',
         minute: 'numeric',
-        ...(this.showSeconds && { second: 'numeric' }),
+        second: 'numeric',
       }).format();
     },
     /* Get and format the date */
@@ -77,7 +74,7 @@ export default {
 <style scoped lang="scss">
 @font-face {
   font-family: 'Digital';
-  src: url('/fonts/Digital-Regular.ttf');
+  src: url('/fonts/7segment.ttf');
 }
 
 .clock {

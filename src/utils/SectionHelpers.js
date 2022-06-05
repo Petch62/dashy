@@ -3,15 +3,7 @@
 import { hideFurnitureOn } from '@/utils/defaults';
 
 /* Returns false if page furniture should be hidden on said route */
-export const shouldBeVisible = (routeName) => {
-  let shouldShow = true;
-  if (!routeName) return shouldShow; // Route name not specified.
-  hideFurnitureOn.forEach((hideOn) => {
-    // If route name on the no-show list, set visibility to false
-    if (routeName.includes(hideOn)) shouldShow = false;
-  });
-  return shouldShow;
-};
+export const shouldBeVisible = (routeName) => !hideFurnitureOn.includes(routeName);
 
 /* Based on section title, item name and index, return a string value for ID */
 const makeItemId = (sectionStr, itemStr, index) => {

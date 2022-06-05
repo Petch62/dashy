@@ -5,15 +5,15 @@
    <br/>
   <img width="120" src="https://i.ibb.co/yhbt6CY/dashy.png" />
   <br/>
-  <b><a href="./docs/showcase.md">User Showcase</a></b> | <b><a href="https://demo.dashy.to">Live Demo</a></b> | <b><a href="./docs/quick-start.md">Getting Started</a></b> | <b><a href="https://dashy.to/docs">Documentation</a></b> | <b><a href="https://github.com/Lissy93/dashy">GitHub</a></b>
+  <b><a href="https://github.com/Lissy93/dashy/blob/master/docs/showcase.md">User Showcase</a></b> | <b><a href="https://demo.dashy.to">Live Demo</a></b> | <b><a href="https://github.com/Lissy93/dashy/blob/master/docs/quick-start.md">Getting Started</a></b> | <b><a href="https://dashy.to/docs">Documentation</a></b> | <b><a href="https://github.com/Lissy93/dashy">GitHub</a></b>
   <br/><br/>
   <a href="https://github.com/awesome-selfhosted/awesome-selfhosted#personal-dashboards">
     <img src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg" alt="Awesome Self-Hosted">
   </a>
-  <a href="./LICENSE">
+  <a href="https://github.com/Lissy93/dashy/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-0aa8d2?logo=opensourceinitiative&logoColor=fff" alt="License MIT">
   </a>
-  <a href="./.github/CHANGELOG.md">
+  <a href="https://github.com/Lissy93/dashy/blob/master/.github/CHANGELOG.md">
     <img src="https://img.shields.io/github/package-json/v/lissy93/dashy?logo=azurepipelines&amp;color=0aa8d2" alt="Current Version">
   </a>
   <a href="https://hub.docker.com/r/lissy93/dashy">
@@ -28,7 +28,7 @@
 </p>
 
 <details>
-  <summary><b>Table of Contents</b></summary>
+  <summary><b>Contents</b></summary>
   <p>
   
 - **Getting Started**
@@ -41,17 +41,18 @@
   - [🧸 Icons](#icons-)
   - [🚦 Status Indicators](#status-indicators-)
   - [📊 Widgets](#widgets-)
-  - [🔐 Authentication](#authentication-)
+  - [💂 Authentication](#authentication-)
+  - [🖱️ Opening Methods](#opening-methods-%EF%B8%8F)
   - [👓 Alternate Views](#alternate-views-)
-  - [🖱️ Opening Methods](#opening-methods-)
   - [🔎 Searching and Shortcuts](#searching-and-shortcuts-)
-  - [⚙️ Config Editor](#config-editor-)
+  - [⚙️ Config Editor](#config-editor-%EF%B8%8F)
   - [☁ Cloud Backup & Sync](#cloud-backup--sync-)
   - [🌎 Language Switching](#language-switching-)
-  - [📃 Multi-Page Support](#multi-page-support-)
+  - [🌳 Dashboard Info](#setting-dashboard-info-)
 - **Community**
   - [📊 System Requirements](#system-requirements-)
-  - [🙋‍♀️ Support](#support-)
+  - [🙋‍♀️ Getting Help](#getting-help-%EF%B8%8F)
+  - [🐛 Raising Issues](#raising-issues-)
   - [💖 Supporting Dashy](#supporting-dashy-)
   - [🏆 Credits](#credits-)
   - [🧱 Developing](#developing-)
@@ -65,18 +66,18 @@
 </details>
 
 ## Features 🌈
-- 📃 Support for multiple pages
-- 🚦 Real-time status monitoring for each of your apps/links
-- 📊 Use widgets to display info and dynamic content from self-hosted services
+
 - 🔎 Instant search by name, domain, or tags + customizable hotkeys & keyboard shortcuts
-- 🎨 Many built-in color themes, with UI color editor and support for custom CSS
+- 🎨 Multiple built-in color themes, with UI color editor and support for custom CSS
 - 🧸 Many icon options - Font-Awesome, homelab icons, auto-fetching Favicon, images, emojis, etc.
+- 🚦 Status monitoring for each of your apps/links for basic availability and uptime checking
+- 📊 Use widgets to display info and dynamic content from self-hosted services
 - 💂 Optional authentication with multi-user access, configurable privileges, and SSO support
 - 🌎 Multi-language support, with 10+ human-translated languages, and more on the way
 - ☁ Optional, encrypted, free off-site cloud backup and restore feature available
 - 💼 A workspace view, for easily switching between multiple apps simultaneously
 - 🛩️ A minimal view, for use as a fast-loading browser Startpage
-- 🖱️ Choose app launch methods: new tab, same tab, clipboard, pop-up modal, or open in workspace view
+- 🖱️ Choose app launch method, either new tab, same tab, a pop-up modal, or in the workspace view
 - 📏 Customizable layout, sizes, text, component visibility, sort order, behavior, etc.
 - 🖼️ Options for a full-screen background image, custom nav-bar links, HTML footer, title, etc.
 - 🚀 Easy to setup with Docker, or on bare metal, or with 1-Click cloud deployment
@@ -86,8 +87,6 @@
 - 🆓 100% free and open-source
 - 🔐 Strong focus on privacy
 - 🌈 And loads more...
-
-**[⬆️ Back to Top](#dashy)**
 
 ## Demo ⚡
 
@@ -107,7 +106,7 @@
 
 ---
 
-## Getting Started 🚀
+## Getting Started 🛫
 
 > For full setup instructions, see: [**Deployment**](./docs/deployment.md)
 
@@ -131,25 +130,25 @@ docker run -d \
 ```
 [![Dashy on Docker Hub](https://dockeri.co/image/lissy93/dashy)](https://hub.docker.com/r/lissy93/dashy)
 
-See also: [examples with Docker Compose](./docs/deployment.md#using-docker-compose). Dashy is also available via GHCR, and tags for other architectures (`arm32v7`, `arm64v8`, etc.) and set versions are supported
+See also examples [with Docker Compose](./docs/deployment.md#using-docker-compose). Dashy is also available via GHCR, and tags for other architectures (`arm32v7`, `arm64v8`, etc.) and set versions are supported
 
 > Once you've got Dashy running, see [App Management Docs](./docs/management.md) for info on using health checks, updating, backups, web-server configs, logs, performance, security, and more.
 
-### Deploying from Source 🔨
+### Deploying from Source 🚀
 
-You will need [git](https://git-scm.com/downloads), the latest or LTS version of [Node.js](https://nodejs.org/) and _(optionally)_ [Yarn](https://yarnpkg.com/) installed on your system.
+You will need [git](https://git-scm.com/downloads), the latest or LTS version of [Node.js](https://nodejs.org/) and (optionally) [Yarn](https://yarnpkg.com/) installed on your system.
 
-- Clone the Repo: `git clone https://github.com/Lissy93/dashy.git` and `cd dashy`
+- Get Code: `git clone https://github.com/Lissy93/dashy.git` and `cd dashy`
 - Configuration: Fill in your settings in `./public/conf.yml`
 - Install dependencies: `yarn`
 - Build: `yarn build`
 - Run: `yarn start`
 
-> See docs: [Full list of Dashy's commands](./docs/management.md#basic-commands)
+> See docs [Full list of Dashy's commands](./docs/management.md#basic-commands)
 
 ### Deploy to the Cloud ☁️
 
-Dashy supports **1-Click deployments** on several popular cloud platforms. To spin up a new instance, just click a link below:
+Dashy supports 1-Click deployments on several popular cloud platforms. To spin up a new instance, just click a link below:
 - [<img src="https://i.ibb.co/ZxtzrP3/netlify.png" width="18"/> Deploy to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/lissy93/dashy)
 - [<img src="https://i.ibb.co/d2P1WZ7/heroku.png" width="18"/> Deploy to Heroku](https://heroku.com/deploy?template=https://github.com/Lissy93/dashy)
 - [<img src="https://i.ibb.co/Ld2FZzb/vercel.png" width="18"/> Deploy to Vercel](https://vercel.com/new/project?template=https://github.com/lissy93/dashy)
@@ -167,7 +166,7 @@ Dashy supports **1-Click deployments** on several popular cloud platforms. To sp
 
 > For full configuration documentation, see: [**Configuring**](./docs/configuring.md)
 
-Dashy is configured through a YAML file, located at `./public/conf.yml`. In addition, you can find a complete list of available options in the [Configuring Docs](./docs/configuring.md). The config can also be edited and saved directly through the UI.
+Dashy is configured through a YAML file, located at `./public/conf.yml`. In addition, you can find a complete list of available options in the [Configuring Docs](/docs/configuring.md). The config can also be edited and saved directly through the UI.
 
 **[⬆️ Back to Top](#dashy)**
 
@@ -177,7 +176,7 @@ Dashy is configured through a YAML file, located at `./public/conf.yml`. In addi
 
 > For full theming documentation, see: [**Theming**](./docs/theming.md)
 
-Dashy comes pre-bundled with several built-in themes, which you can preview, apply and edit through the UI. With the theme configurator and support for custom CSS, everything is in place to quickly develop your own unique-looking dashboard.
+Dashy comes pre-bundled with several built-in themes, which you can preview, applied and edit through the UI. With the theme configurator and support for custom CSS, everything is in place to quickly develop your unique-looking dashboard.
 
 <p align="center">
   <a href="https://i.ibb.co/BVSHV1v/dashy-themes-slideshow.gif">
@@ -214,7 +213,7 @@ The following icon types are supported:
 [font-awesome]: https://fontawesome.com/icons
 [simple-icons]: https://simpleicons.org/
 [material icons]: https://github.com/Templarian/MaterialDesign
-[dashboard-icons]: https://github.com/WalkxHub/dashboard-icons
+[dashboard-icons]: https://github.com/WalkxCode/dashboard-icons
 
 
 <p align="center">
@@ -258,7 +257,7 @@ You can display dynamic content from services in the form of widgets. There are 
 
 ---
 
-## Authentication 🔐
+## Authentication 💂
 
 > For full authentication documentation, see: [**Authentication**](./docs/authentication.md)
 
@@ -315,8 +314,6 @@ There are several different ways you can launch apps. You can specify the defaul
 - `workspace` - Changes to Workspace view and launches app
 - `clipboard` - Copy the app's URL to your system clipboard
 - `top` - Opens in the top-most browsing context, useful if you're accessing Dashy through an iframe
-
-**[⬆️ Back to Top](#dashy)**
 
 ---
 
@@ -408,51 +405,22 @@ Dashy supports multiple languages and locales. When available, your language sho
 - 🇳🇱 **Dutch**: `nl` - Contributed by **[@evroon](https://github.com/evroon)**
 - 🇲🇫 **French**: `fr` - Contributed by **[@EVOTk](https://github.com/EVOTk)**
 - 🇩🇪 **German**: `de` - Contributed by **[@Niklashere](https://github.com/Niklashere)**
-- 🇮🇹 **Italian**: `it` - Contributed by **[@alexdelprete](https://github.com/alexdelprete)**
 - 🇳🇴 **Norwegian Bokmål**: `nb` - Contributed by **[@rubjo](https://github.com/rubjo)**
 - 🇵🇱 **Polish**: `pl` - Contributed by **[@skaarj1989](https://github.com/skaarj1989)**
-- 🇵🇹 **Portuguese**: `pt` - Contributed by **[@LeoColman](https://github.com/LeoColman)**
 - 🇪🇸 **Spanish**: `es` - Contributed by **[@lu4t](https://github.com/lu4t)**
 - 🇸🇮 **Slovenian**: `sl` - Contributed by **[@UrekD](https://github.com/UrekD)**
 - 🇸🇪 **Swedish**: `sv` - Contributed by **[@BOZG](https://github.com/BOZG)**
-- 🇹🇼 **Traditional Chinese**: `zh-TW` - Contributed by **[@stanly0726](https://github.com/stanly0726)**
-- 🇷🇺 **Russian**: `ru`
-- 🇦🇪 **Arabic**: `ar`
-- 🇮🇳 **Hindi**: `hi`
-- 🇯🇵 **Japanese**: `ja`
+- 🇮🇹 **Italian**: `it` - Machine Translated *(awaiting human review)*
+- 🇵🇹 **Portuguese**: `pt` - Machine Translated *(awaiting human review)*
+- 🇷🇺 **Russian**: `ru` - Contributed by Anon
+- 🇦🇪 **Arabic**: `ar` - Contributed by Anon
+- 🇮🇳 **Hindi**: `hi` - Contributed by Anon
+- 🇯🇵 **Japanese**: `ja` - Contributed by Anon
 
 #### Add your Language
 I would love Dashy to be available to everyone without language being a barrier to entry. If you've got a few minutes to spare, consider adding translations for your language. It's a quick task, and all text is in [a single JSON file](https://github.com/Lissy93/dashy/tree/master/src/assets/locales). Since any missing text will fall back to English, you don't need to translate it all.
 
 **[⬆️ Back to Top](#dashy)**
-
----
-
-## Multi-Page Support 📃
-
-> For full multi-page documentation, see: [**Pages & Sections**](./docs/pages-and-sections.md)
-
-Within your dashboard, you can have as many sub-pages as you require. To load additional pages, specify a name, and path to a config file under `pages`. The config file can be either local (stored in `/public`), or remote (located anywhere accessible).
-
-```yaml
-pages:
-- name: Networking Services
-  path: 'networking.yml'
-- name: Work Stuff
-  path: 'work.yml'
-```
-
-Or
-
-```yaml
-pages:
-- name: Getting Started
-  path: 'https://snippet.host/tvcw/raw'
-- name: Homelab
-  path: 'https://snippet.host/tetp/raw'
-- name: Browser Startpage
-  path: 'https://snippet.host/zcom/raw'
-```
 
 ---
 
@@ -472,8 +440,6 @@ Dashy also wells run on low-powered ARM-based single board computers, such as a 
 ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![IE](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Opera](https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
 --- | --- | --- | --- | --- |
 Latest ✔ | Latest ✔ | 10+ ✔ | Latest ✔ | 6.1+ ❌ |
-
-**[⬆️ Back to Top](#dashy)**
 
 ---
 
@@ -519,121 +485,6 @@ Thank you so much to everyone who has helped with Dashy so far; every contributi
 Huge thanks to the sponsors helping to support Dashy's development!
 <!-- readme: sponsors -start -->
 <table>
-<tr>
-    <td align="center">
-        <a href="https://github.com/peng1can">
-            <img src="https://avatars.githubusercontent.com/u/225854?v=4" width="80;" alt="peng1can"/>
-            <br />
-            <sub><b>Peng1can</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/emlazzarin">
-            <img src="https://avatars.githubusercontent.com/u/1141361?u=714e3487a3f2e0df721b01a0133945f075d3ff68&v=4" width="80;" alt="emlazzarin"/>
-            <br />
-            <sub><b>Eddy Lazzarin</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/BOZG">
-            <img src="https://avatars.githubusercontent.com/u/6022344?u=a52f42b946a1e1156f7bb9d7f65e9e28bb2da89f&v=4" width="80;" alt="BOZG"/>
-            <br />
-            <sub><b>Stephen Rigney</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Robert-Ernst">
-            <img src="https://avatars.githubusercontent.com/u/9050259?u=7253b4063f1ffe3b5a894263c8b2056151802508&v=4" width="80;" alt="Robert-Ernst"/>
-            <br />
-            <sub><b>Robert Ernst</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/vlad-timofeev">
-            <img src="https://avatars.githubusercontent.com/u/11474041?v=4" width="80;" alt="vlad-timofeev"/>
-            <br />
-            <sub><b>Vlad Timofeev</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/kitl000">
-            <img src="https://avatars.githubusercontent.com/u/19974513?u=6b426af87e6a57781e9b819a37393543db6d68ec&v=4" width="80;" alt="kitl000"/>
-            <br />
-            <sub><b>Kit L.</b></sub>
-        </a>
-    </td></tr>
-<tr>
-    <td align="center">
-        <a href="https://github.com/Byolock">
-            <img src="https://avatars.githubusercontent.com/u/25748003?v=4" width="80;" alt="Byolock"/>
-            <br />
-            <sub><b>Byolock</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/PAPAMICA">
-            <img src="https://avatars.githubusercontent.com/u/29079741?v=4" width="80;" alt="PAPAMICA"/>
-            <br />
-            <sub><b>Mickael Asseline</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/hugalafutro">
-            <img src="https://avatars.githubusercontent.com/u/30209689?v=4" width="80;" alt="hugalafutro"/>
-            <br />
-            <sub><b>Hugalafutro</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/shadowking001">
-            <img src="https://avatars.githubusercontent.com/u/43928955?u=a00b44f22e5a82234d9b406ac048def1fbc16e31&v=4" width="80;" alt="shadowking001"/>
-            <br />
-            <sub><b>LawrenceP.</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/KierenConnell">
-            <img src="https://avatars.githubusercontent.com/u/46445781?u=5502f8fb780938e2825735d7bbb9236642d212c0&v=4" width="80;" alt="KierenConnell"/>
-            <br />
-            <sub><b>Kieren Connell</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Antiz96">
-            <img src="https://avatars.githubusercontent.com/u/53110319?u=a4fad84fed8fb2fd9ca7c507d303fd6048b3e497&v=4" width="80;" alt="Antiz96"/>
-            <br />
-            <sub><b>Robin Candau</b></sub>
-        </a>
-    </td></tr>
-<tr>
-    <td align="center">
-        <a href="https://github.com/ced4568">
-            <img src="https://avatars.githubusercontent.com/u/60725859?v=4" width="80;" alt="ced4568"/>
-            <br />
-            <sub><b>Kyforker148</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/ratty222">
-            <img src="https://avatars.githubusercontent.com/u/92832598?u=137b65530cbd5f5af9c24cde51baa6cc77cc934b&v=4" width="80;" alt="ratty222"/>
-            <br />
-            <sub><b>Ratty222</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/undefined">
-            <img src="" width="80;" alt="undefined"/>
-            <br />
-            <sub><b>Undefined</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/jtfinley72">
-            <img src="https://avatars.githubusercontent.com/u/96497997?v=4" width="80;" alt="jtfinley72"/>
-            <br />
-            <sub><b>Jtfinley72</b></sub>
-        </a>
-    </td></tr>
 </table>
 <!-- readme: sponsors -end -->
 
@@ -743,7 +594,7 @@ A few self-hosted web apps serve a similar purpose to Dashy. If you're looking f
 Dashy is Licensed under [MIT X11](https://en.wikipedia.org/wiki/MIT_License)
 
 ```
-Copyright © 2021-2022 Alicia Sykes <https://aliciasykes.com>
+Copyright © 2021 Alicia Sykes <https://aliciasykes.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this
 software and associated documentation files (the "Software"), to deal in the Software

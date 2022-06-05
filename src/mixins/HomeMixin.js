@@ -3,14 +3,10 @@
  */
 
 import Defaults, { localStorageKeys, iconCdns } from '@/utils/defaults';
-import Keys from '@/utils/StoreMutations';
 import { searchTiles } from '@/utils/Search';
-import { checkItemVisibility } from '@/utils/CheckItemVisibility';
 
 const HomeMixin = {
-  props: {
-    subPageInfo: Object,
-  },
+  props: {},
   computed: {
     sections() {
       return this.$store.getters.sections;
@@ -27,30 +23,11 @@ const HomeMixin = {
     modalOpen() {
       return this.$store.state.modalOpen;
     },
-    pageId() {
-      return (this.subPageInfo && this.subPageInfo.pageId) ? this.subPageInfo.pageId : 'home';
-    },
   },
   data: () => ({
     searchValue: '',
   }),
-  async mounted() {
-    await this.getConfigForRoute();
-  },
-  watch: {
-    async $route() {
-      await this.getConfigForRoute();
-    },
-  },
   methods: {
-    async getConfigForRoute() {
-      this.$store.commit(Keys.SET_CURRENT_SUB_PAGE, this.subPageInfo);
-      if (this.subPageInfo && this.subPageInfo.confPath) { // Get config for sub-page
-        await this.$store.dispatch(Keys.INITIALIZE_MULTI_PAGE_CONFIG, this.subPageInfo.confPath);
-      } else { // Otherwise, use main config
-        this.$store.commit(Keys.USE_MAIN_CONFIG);
-      }
-    },
     updateModalVisibility(modalState) {
       this.$store.commit('SET_MODAL_OPEN', modalState);
     },
@@ -65,11 +42,8 @@ const HomeMixin = {
     },
     /* Returns only the tiles that match the users search query */
     filterTiles(allTiles) {
-      if (!allTiles) {
-        return [];
-      }
-      const visibleTiles = allTiles.filter((tile) => checkItemVisibility(tile));
-      return searchTiles(visibleTiles, this.searchValue);
+      if (!allTiles) return [];
+      return searchTiles(allTiles, this.searchValue);
     },
     /* Checks if any sections or items use icons from a given CDN */
     checkIfIconLibraryNeeded(prefix) {
@@ -87,8 +61,6 @@ const HomeMixin = {
     },
     /* Checks if any of the icons are Font Awesome glyphs */
     checkIfFontAwesomeNeeded() {
-      if (this.appConfig.enableFontAwesome === false) return false;
-      if (this.appConfig.enableFontAwesome) return true;
       let isNeeded = this.checkIfIconLibraryNeeded('fa-');
       const currentTheme = localStorage[localStorageKeys.THEME]; // Some themes require FA
       if (['material', 'material-dark'].includes(currentTheme)) isNeeded = true;
@@ -96,7 +68,7 @@ const HomeMixin = {
     },
     /* Injects font-awesome's script tag, only if needed */
     initiateFontAwesome() {
-      if (this.checkIfFontAwesomeNeeded()) {
+      if (this.appConfig.enableFontAwesome || this.checkIfFontAwesomeNeeded()) {
         const fontAwesomeScript = document.createElement('script');
         const faKey = this.appConfig.fontAwesomeKey || Defaults.fontAwesomeKey;
         fontAwesomeScript.setAttribute('src', `${iconCdns.fa}/${faKey}.js`);
@@ -105,9 +77,7 @@ const HomeMixin = {
     },
     /* Checks if any of the icons are Material Design Icons */
     checkIfMdiNeeded() {
-      const userOverride = this.appConfig.enableMaterialDesignIcons;
-      if (userOverride === false) return false;
-      return userOverride || this.checkIfIconLibraryNeeded('mdi-');
+      return this.checkIfIconLibraryNeeded('mdi-');
     },
     /* Injects Material Design Icons, only if needed */
     initiateMaterialDesignIcons() {

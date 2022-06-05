@@ -14,7 +14,8 @@ export default {
     credentials() {
       if (this.options.username && this.options.password) {
         const stringifiedUser = `${this.options.username}:${this.options.password}`;
-        return { Authorization: `Basic ${window.btoa(stringifiedUser)}` };
+        const headers = { Authorization: `Basic ${window.btoa(stringifiedUser)}` };
+        return { headers };
       }
       return null;
     },

@@ -28,22 +28,15 @@ const makeErrorMessage2 = (data) => '❌ Service Error - '
   + `${data.status} - ${data.statusText}`;
 
 /* Kicks of a HTTP request, then formats and renders results */
-const makeRequest = (url, options, render) => {
-  const {
-    headers, enableInsecure, acceptCodes, maxRedirects,
-  } = options;
+const makeRequest = (url, headers, insecure, acceptCodes, render) => {
   const validCodes = acceptCodes && acceptCodes !== 'null' ? acceptCodes : null;
   const startTime = new Date();
   const requestMaker = axios.create({
     httpsAgent: new https.Agent({
-      rejectUnauthorized: !enableInsecure,
+      rejectUnauthorized: !insecure,
     }),
   });
-  requestMaker.request({
-    url,
-    headers,
-    maxRedirects,
-  })
+  requestMaker.get(url, { headers })
     .then((response) => {
       const statusCode = response.status;
       const { statusText } = response;
@@ -107,13 +100,9 @@ module.exports = (paramStr, render) => {
     const params = new URLSearchParams(paramStr);
     const url = decodeURIComponent(params.get('url'));
     const acceptCodes = decodeURIComponent(params.get('acceptCodes'));
-    const maxRedirects = decodeURIComponent(params.get('maxRedirects')) || 0;
     const headers = decodeHeaders(params.get('headers'));
     const enableInsecure = !!params.get('enableInsecure');
     if (!url || url === 'undefined') immediateError(render);
-    const options = {
-      headers, enableInsecure, acceptCodes, maxRedirects,
-    };
-    makeRequest(url, options, render);
+    makeRequest(url, headers, enableInsecure, acceptCodes, render);
   }
 };
