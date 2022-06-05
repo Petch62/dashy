@@ -38,6 +38,9 @@ const isDocker = !!process.env.IS_DOCKER;
 /* Checks env var for port. If undefined, will use Port 80 for Docker, or 4000 for metal */
 const port = process.env.PORT || (isDocker ? 80 : 4000);
 
+/* Checks env var for host. If undefined, will use 0.0.0.0 */
+const host = process.env.HOST || '0.0.0.0';
+
 /* Attempts to get the users local IP, used as part of welcome message */
 const getLocalIp = () => {
   const dnsLookup = util.promisify(dns.lookup);
@@ -48,7 +51,7 @@ const getLocalIp = () => {
 const printWelcomeMessage = () => {
   try {
     getLocalIp().then(({ address }) => {
-      const ip = address || 'localhost';
+      const ip = process.env.HOST || address || 'localhost';
       console.log(printMessage(ip, port, isDocker)); // eslint-disable-line no-console
     });
   } catch (e) {
@@ -70,7 +73,7 @@ const app = express()
   .use(sslServer.middleware)
   // Serves up static files
   .use(express.static(path.join(__dirname, 'dist')))
-  .use(express.static(path.join(__dirname, 'public')))
+  .use(express.static(path.join(__dirname, 'public'), { index: 'initialization.html' }))
   // Load middlewares for parsing JSON, and supporting HTML5 history routing
   .use(express.json({ limit: '1mb' }))
   .use(history())
@@ -122,7 +125,7 @@ const app = express()
 
 /* Create HTTP server from app on port, and print welcome message */
 http.createServer(app)
-  .listen(port, () => {
+  .listen(port, host, () => {
     printWelcomeMessage();
   })
   .on('error', (err) => {

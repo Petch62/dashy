@@ -47,6 +47,7 @@ module.exports = {
   },
   /* List of built-in themes, to be displayed within the theme-switcher dropdown */
   builtInThemes: [
+    'default',
     'callisto',
     'material',
     'material-dark',
@@ -58,8 +59,13 @@ module.exports = {
     'cherry-blossom',
     'nord-frost',
     'nord',
+    'argon',
+    'fallout',
+    'whimsy',
     'oblivion',
     'adventure',
+    'crayola',
+    'deep-ocean',
     'minimal-dark',
     'minimal-light',
     'thebe',
@@ -76,6 +82,8 @@ module.exports = {
     'material-dark-original',
     'high-contrast-dark',
     'high-contrast-light',
+    'adventure-basic',
+    'basic',
   ],
   /* Default color options for the theme configurator swatches */
   swatches: [
@@ -144,6 +152,7 @@ module.exports = {
     EDIT_SECTION: 'EDIT_SECTION',
     EDIT_PAGE_INFO: 'EDIT_PAGE_INFO',
     EDIT_APP_CONFIG: 'EDIT_APP_CONFIG',
+    EDIT_MULTI_PAGES: 'EDIT_MULTI_PAGES',
     EXPORT_CONFIG_MENU: 'EXPORT_CONFIG_MENU',
     MOVE_ITEM_TO: 'MOVE_ITEM_TO',
   },
@@ -215,6 +224,7 @@ module.exports = {
     cryptoPrices: 'https://api.coingecko.com/api/v3/coins/',
     cryptoWatchList: 'https://api.coingecko.com/api/v3/coins/markets/',
     cveVulnerabilities: 'https://www.cvedetails.com/json-feed.php',
+    domainMonitor: 'https://api.whoapi.com',
     ethGasPrices: 'https://ethgas.watch/api/gas',
     ethGasHistory: 'https://ethgas.watch/api/gas/trend',
     exchangeRates: 'https://v6.exchangerate-api.com/v6/',

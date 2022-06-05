@@ -35,6 +35,7 @@ import {
 } from '@/utils/ThemeHelper';
 import Defaults, { localStorageKeys } from '@/utils/defaults';
 import Keys from '@/utils/StoreMutations';
+import ErrorHandler from '@/utils/ErrorHandler';
 import IconPalette from '@/assets/interface-icons/config-color-palette.svg';
 
 export default {
@@ -75,7 +76,8 @@ export default {
     themeNames: function themeNames() {
       const externalThemeNames = Object.keys(this.externalThemes);
       const specialThemes = ['custom'];
-      return [...externalThemeNames, ...Defaults.builtInThemes, ...specialThemes];
+      return [...this.extraThemeNames, ...externalThemeNames,
+        ...Defaults.builtInThemes, ...specialThemes];
     },
     extraThemeNames() {
       const userThemes = this.appConfig.cssThemes || [];
@@ -85,34 +87,36 @@ export default {
     /* Returns an array of links to external CSS from the Config */
     externalThemes() {
       const availibleThemes = {};
-      if (this.appConfig) {
-        if (this.appConfig.externalStyleSheet) {
-          const externals = this.appConfig.externalStyleSheet;
-          if (Array.isArray(externals)) {
-            externals.forEach((ext, i) => {
-              availibleThemes[`External Stylesheet ${i + 1}`] = ext;
-            });
-          } else {
-            availibleThemes['External Stylesheet'] = this.appConfig.externalStyleSheet;
-          }
+      if (this.appConfig && this.appConfig.externalStyleSheet) {
+        const externals = this.appConfig.externalStyleSheet;
+        if (Array.isArray(externals)) {
+          externals.forEach((ext, i) => {
+            availibleThemes[`External Stylesheet ${i + 1}`] = ext;
+          });
+        } else if (typeof externals === 'string') {
+          availibleThemes['External Stylesheet'] = this.appConfig.externalStyleSheet;
+        } else {
+          ErrorHandler('External stylesheets must be of type string or string[]');
         }
       }
-      availibleThemes.Default = '#';
+      // availibleThemes.Default = '#';
       return availibleThemes;
     },
   },
   mounted() {
     const initialTheme = this.getInitialTheme();
     this.selectedTheme = initialTheme;
-    // Pass all user custom stylesheets to the themehelper
-    const added = Object.keys(this.externalThemes).map(
-      name => this.themeHelper.add(name, this.externalThemes[name]),
-    );
     // Quicker loading, if the theme is local we can apply it immidiatley
     if (this.isThemeLocal(initialTheme)) {
       this.updateTheme(initialTheme);
+    }
+
     // If it's an external stylesheet, then wait for promise to resolve
-    } else if (initialTheme !== Defaults.theme) {
+    if (this.externalThemes && Object.entries(this.externalThemes).length > 0) {
+      const added = Object.keys(this.externalThemes).map(
+        name => this.themeHelper.add(name, this.externalThemes[name]),
+      );
+      // Once, added, then apply users initial theme
       Promise.all(added).then(() => {
         this.updateTheme(initialTheme);
       });

@@ -1,47 +1,390 @@
----
-# Page meta info, like heading, footer text and nav links
+ appConfig:
+  theme: colorful
+  fontAwesomeKey: 0821c65656
+  layout: auto
+  iconSize: large
+  language: fr
+  statusCheck: true
+  startingView: default
+  defaultOpeningMethod: newtab
+  statusCheckInterval: 0
+  faviconApi: allesedv
+  routingMode: history
+  enableMultiTasking: false
+  webSearch:
+    disableWebSearch: false
+    searchEngine: duckduckgo
+    openingMethod: newtab
+    searchBangs: {}
+  enableFontAwesome: true
+  cssThemes: []
+  customColors:
+    colorful:
+      primary: '#e8eae1'
+      background: '#0b1021'
+      background-darker: '#05070e'
+  externalStyleSheet: []
+  hideComponents:
+    hideHeading: false
+    hideNav: false
+    hideSearch: false
+    hideSettings: false
+    hideFooter: false
+  auth:
+    enableGuestAccess: false
+    users: []
+    enableKeycloak: false
+    keycloak:
+      serverUrl: '''http://'''
+      realm: '''petch'''
+      clientId: '''dashy'''
+  showSplashScreen: false
+  allowConfigEdit: true
+  enableServiceWorker: false
+  disableContextMenu: false
+  disableUpdateChecks: false
+  disableSmartSort: false
+  enableErrorReporting: false
 pageInfo:
   title: Dashy
-  description: Welcome to your new dashboard!
+  description: ''
   navLinks:
-  - title: GitHub
-    path: https://github.com/Lissy93/dashy
-  - title: Documentation
-    path: https://dashy.to/docs
-
-# Optional app settings and configuration
-appConfig:
-  theme: colorful
-
-# Main content - An array of sections, each containing an array of items
+    - title: Home
+      path: /
+    - title: About
+      path: /about
+    - title: Source Code
+      path: https://github.com/Lissy93/dashy
+  footerText: ''
 sections:
-- name: Getting Started
-  icon: fas fa-rocket
-  items:
-  - title: Dashy Live
-    description: Development a project management links for Dashy
-    icon: https://i.ibb.co/qWWpD0v/astro-dab-128.png
-    url: https://live.dashy.to/
-    target: newtab
-  - title: GitHub
-    description: Source Code, Issues and Pull Requests
-    url: https://github.com/lissy93/dashy
-    icon: favicon
-  - title: Docs
-    description: Configuring & Usage Documentation
-    provider: Dashy.to
-    icon: far fa-book
-    url: https://dashy.to/docs
-  - title: Showcase
-    description: See how others are using Dashy
-    url: https://github.com/Lissy93/dashy/blob/master/docs/showcase.md
-    icon: far fa-grin-hearts
-  - title: Config Guide
-    description: See full list of configuration options
-    url: https://github.com/Lissy93/dashy/blob/master/docs/configuring.md
-    icon: fas fa-wrench
-  - title: Support
-    description: Get help with Dashy, raise a bug, or get in contact
-    url: https://github.com/Lissy93/dashy/blob/master/.github/SUPPORT.md
-    icon: far fa-hands-helping
-  
+  - name: Today
+    icon: far fa-calendar
+    widgets:
+      - type: clock
+        options:
+          format: fr-FR
+        id: 0_513_clock
+      - type: weather
+        options:
+          apiKey: a0d55522a28f56fc70395dc9fe96580b
+          city: Saint-Omer,FR
+          units: metric
+          hide: false
+        id: 1_513_weather
+  - name: Raspberry Pi
+    items:
+      - title: Monitor Jeedom
+        description: Monitor
+        icon: https://petch.freeboxos.fr/Monitor/favicon.ico
+        url: https://petch.freeboxos.fr/Monitor/index.php
+        id: 0_1171_monitorjeedom
+      - title: Monitor OldPi
+        description: Monitor
+        icon: https://petch.freeboxos.fr/Monitor/favicon.ico
+        url: http://petch.freeboxos.fr:8890/Monitor/
+        id: 1_1171_monitoroldpi
+      - title: Monitor Pi Bluetooth
+        description: Monitor
+        icon: https://petch.freeboxos.fr/Monitor/favicon.ico
+        url: http://192.168.1.52/Monitor/
+        id: 2_1171_monitorpibluetooth
+      - title: Monitor Pi Hyperion
+        description: Monitor
+        icon: https://petch.freeboxos.fr/Monitor/favicon.ico
+        url: http://192.168.1.53/Monitor/
+        id: 3_1171_monitorpihyperion
+      - title: RPI-Monitor Jeedom
+        description: RPI-Monitor
+        icon: https://static.raspberrypi.org/img/logos/rp-logo.png
+        url: http://192.168.1.56:8888/index.html
+        id: 4_1171_rpimonitorjeedom
+      - title: RPI-Monitor EarnApp
+        description: RPI-Monitor
+        icon: https://static.raspberrypi.org/img/logos/rp-logo.png
+        url: http://192.168.1.50:8888/index.html
+        id: 5_1171_rpimonitorearnapp
+      - title: RPI-Monitor Bluetooth
+        description: RPI-Monitor
+        icon: https://static.raspberrypi.org/img/logos/rp-logo.png
+        url: http://petch.freeboxos.fr:8891/
+        id: 6_1171_rpimonitorbluetooth
+      - title: RPI-Monitor Hyperion
+        description: RPI-Monitor
+        icon: https://static.raspberrypi.org/img/logos/rp-logo.png
+        url: http://192.168.1.53:8888/index.html
+        id: 7_1171_rpimonitorhyperion
+      - title: JEEDOM
+        description: Jeedom
+        icon: https://petch.freeboxos.fr/favicon.ico
+        url: https://petch.freeboxos.fr/index.php?v=d&p=view
+        id: 8_1171_jeedom
+      - title: UPS Monitor
+        description: Moniteur Onduleur
+        icon: far fa-battery-full
+        url: http://192.168.1.50/cgi-bin/nut/upsstats.cgi
+        id: 9_1171_upsmonitor
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 2
+      collapsed: false
+      hideForGuests: false
+  - name: Getting Started
+    items:
+      - title: FREEBOX
+        description: Freebox
+        icon: favicon
+        url: http://mafreebox.freebox.fr
+        id: 0_1481_freebox
+      - title: Forum Jeedom
+        description: Forum Jeedom
+        icon: favicon
+        url: https://community.jeedom.com/
+        id: 1_1481_forumjeedom
+      - title: Programme Tele
+        description: Programme Tele
+        icon: favicon
+        url: https://www.programme-tv.net/
+        id: 2_1481_programmetele
+      - title: Email Free
+        description: Email Free
+        icon: favicon
+        url: https://webmail.free.fr/?_task=mail&_mbox=INBOX
+        id: 3_1481_emailfree
+      - title: ESP Test
+        description: ESP TEST
+        icon: far fa-rocket
+        url: http://192.168.1.74
+        id: 4_1481_esptest
+  - name: Electronique
+    items:
+      - title: Hackster
+        description: Electronic project
+        icon: favicon
+        url: https://www.hackster.io/
+        id: 0_1264_hackster
+      - title: Arduino
+        description: Arduino
+        icon: favicon
+        url: http://www.arduino.cc
+        id: 1_1264_arduino
+      - title: Thingiverse
+        description: Objets 3D
+        icon: favicon
+        url: http://www.thingiverse.com
+        id: 2_1264_thingiverse
+      - title: ESP8266
+        description: ESP8266 Arduino
+        icon: favicon
+        url: https://github.com/esp8266/Arduino
+        id: 3_1264_esp
+      - title: ESP32
+        description: ESP32 Arduino
+        icon: favicon
+        url: https://github.com/espressif/arduino-esp32
+        id: 4_1264_esp
+      - title: Marlin
+        description: Objets 3D
+        icon: favicon
+        url: https://github.com/MarlinFirmware/Marlin
+        id: 5_1264_marlin
+      - title: Bigtreetech TouchScreen
+        description: Objets 3D
+        icon: favicon
+        url: https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware
+        id: 6_1264_bigtreetechtouchscreen
+  - name: Achats
+    items:
+      - title: Aliexpress
+        description: Aliexpress
+        icon: favicon
+        url: https://fr.aliexpress.com/
+        id: 0_596_aliexpress
+      - title: Amazon
+        description: Amazon
+        icon: favicon
+        url: https://www.amazon.fr/
+        id: 1_596_amazon
+      - title: Banggood
+        description: Banggood
+        icon: favicon
+        url: https://www.banggood.com/
+        id: 2_596_banggood
+      - title: Aftership
+        description: Suivi Colis
+        icon: favicon
+        url: https://admin.aftership.com/
+        id: 3_596_aftership
+  - name: Download
+    items:
+      - title: Papaflix
+        description: Papaflix
+        icon: favicon
+        url: https://www2.papaflix.com/
+        id: 0_824_papaflix
+      - title: Extreme Down
+        description: Extreme Down
+        icon: favicon
+        url: https://www.extreme-down.io/home.html
+        id: 1_824_extremedown
+      - title: Ygg Torrent
+        description: Ygg Torrent
+        icon: favicon
+        url: https://www.yggtorrent.la/
+        id: 2_824_yggtorrent
+      - title: Ox Torrent
+        description: Ox Torrent
+        icon: favicon
+        url: https://www.oxtorrent.si/
+        id: 3_824_oxtorrent
+  - name: Camera
+    items:
+      - title: Hyperion
+        description: Hyperion Ambilight
+        icon: >-
+          https://raw.githubusercontent.com/hyperion-project/hyperion.ng/master/assets/webconfig/favicon.png
+        url: http://192.168.1.53:8090/
+        id: 0_585_hyperion
+      - title: ENDER 3
+        description: Imprimante ENDER 3
+        icon: https://cdn-icons-png.flaticon.com/512/881/881521.png
+        url: http://192.168.1.68:9601/stream
+        id: 1_585_ender
+      - title: Anet A8
+        description: Imprimante Anet A8
+        icon: https://cdn-icons-png.flaticon.com/512/881/881521.png
+        url: http://192.168.1.69:9601/stream
+        id: 2_585_aneta
+  - name: PROGRAMMATION
+    items:
+      - title: Node-Red
+        description: Node Red
+        icon: https://nodered.org/about/resources/media/node-red-icon.png
+        url: http://192.168.1.56:1880/
+        id: 0_992_nodered
+      - title: ESP8266 Server Update
+        description: ESP8266 Server Update sur le raspberry avec node red
+        icon: https://www.favicon.cc/logo3d/852983.png
+        url: http://192.168.1.56:1880/esp8266-ota
+        id: 1_992_espserverupdate
+      - title: ESP32 Server Update
+        description: ESP32 Server Update sur le raspberry avec node red
+        icon: https://www.favicon.cc/logo3d/852983.png
+        url: http://192.168.1.56:1880/esp32-ota
+        id: 2_992_espserverupdate
+  - name: ESP
+    items:
+      - title: Volets
+        description: Gestion Volets Roulant
+        icon: far fa-blinds
+        url: http://192.168.1.76/
+        id: 0_232_volets
+      - title: Serveur Tele
+        description: Gestion Serveur Tele
+        icon: far fa-tv
+        url: http://192.168.1.70/
+        id: 1_232_serveurtele
+      - title: Brosses
+        description: Gestion Serveur Brosses
+        icon: far fa-toothbrush
+        url: http://192.168.1.78/
+        id: 2_232_brosses
+      - title: Wattmetre
+        description: Gestion Serveur Wattmetre
+        icon: far fa-bolt
+        url: http://192.168.1.77/
+        id: 3_232_wattmetre
+      - title: Linky
+        description: Gestion Serveur Linky
+        icon: far fa-outlet
+        url: http://192.168.1.79/
+        id: 4_232_linky
+      - title: Gazpar
+        description: Gestion Serveur Gazpar
+        icon: far fa-burn
+        url: http://192.168.1.81/
+        id: 5_232_gazpar
+      - title: ESP3D
+        description: Gestion Serveur ESP3D
+        icon: far fa-cube
+        url: http://192.168.1.66/
+        id: 6_232_espd
+      - title: Matrice Leds
+        description: Gestion Matrice Leds
+        icon: far fa-font-case
+        url: http://192.168.1.40/
+        id: 7_232_matriceleds
+      - title: ESP Watchdog
+        description: Watchdog Jeedom
+        icon: far fa-dog
+        url: http://192.168.1.57
+        id: 8_232_espwatchdog
+  - name: Exterieur
+    items:
+      - title: ENDER 3
+        description: Imprimante ENDER 3
+        icon: https://cdn-icons-png.flaticon.com/512/881/881521.png
+        url: http://82.64.203.211:9601/stream
+        id: 0_957_ender
+      - title: Anet A8
+        description: Imprimante Anet A8
+        icon: https://cdn-icons-png.flaticon.com/512/881/881521.png
+        url: http://82.64.203.211:9602/stream
+        id: 1_957_aneta
+      - title: Volets
+        description: Gestion Volets Roulant
+        icon: far fa-blinds
+        url: http://petch.freeboxos.fr:90
+        id: 2_957_volets
+      - title: Serveur Tele
+        description: Gestion Serveur Tele
+        icon: far fa-tv
+        url: http://petch.freeboxos.fr:90
+        id: 3_957_serveurtele
+      - title: Brosses
+        description: Gestion Serveur Brosses
+        icon: far fa-toothbrush
+        url: http://petch.freeboxos.fr:181
+        id: 4_957_brosses
+      - title: ESP Watchdog
+        description: Watchdog Jeedom
+        icon: far fa-dog
+        url: http://petch.freeboxos.fr:91
+        id: 5_957_espwatchdog
+      - title: Node Red
+        description: Gestion Node Red
+        icon: https://nodered.org/about/resources/media/node-red-icon.png
+        url: http://petch.freeboxos.fr:1880
+        id: 6_957_nodered
+      - title: Rpi Monitor Jeedom
+        description: Rpi Monitor Jeedom
+        icon: https://static.raspberrypi.org/img/logos/rp-logo.png
+        url: http://petch.freeboxos.fr:8888
+        id: 7_957_rpimonitorjeedom
+      - title: Rpi Monitor EarnApp
+        description: Rpi Monitor EarnApp
+        icon: https://static.raspberrypi.org/img/logos/rp-logo.png
+        url: http://petch.freeboxos.fr:8889
+        id: 8_957_rpimonitorearnapp
+  - name: Money
+    items:
+      - title: Jumptask
+        description: Crypto
+        icon: favicon
+        url: https://app.jumptask.io/
+        id: 0_520_jumptask
+      - title: EarnApp
+        description: EarnApp
+        icon: favicon
+        url: https://earnapp.com/dashboard/
+        id: 1_520_earnapp
+      - title: Peer2Profit
+        description: Peer2Profit
+        icon: favicon
+        url: https://peer2profit.com/dashboard
+        id: 2_520_peerprofit
+      - title: HoneyGain
+        description: HoneyGain
+        icon: favicon
+        url: https://dashboard.honeygain.com/
+        id: 3_520_honeygain
