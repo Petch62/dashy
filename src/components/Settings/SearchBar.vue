@@ -172,7 +172,6 @@ export default {
         color: var(--search-label-color);
         margin: 0.5rem;
         display: inline;
-        word-break: keep-all;
     }
     input {
       display: inline-block;

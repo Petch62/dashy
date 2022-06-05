@@ -51,11 +51,10 @@
       </Button>
     </div>
     <!-- Open Modal Buttons -->
-    <div class="edit-banner-section edit-config-buttons-container">
+    <div class="edit-banner-section edit-site-config-buttons">
       <p class="section-sub-title">
         {{ $t('interactive-editor.menu.edit-site-data-subheading') }}
       </p>
-      <!-- Button to open pageInfo editor -->
       <Button
         :click="openEditPageInfo"
         :disallow="!permissions.allowViewConfig"
@@ -64,7 +63,6 @@
         {{ $t('interactive-editor.menu.edit-page-info-btn') }}
         <PageInfoIcon />
       </Button>
-      <!-- Button to open appConfig editor -->
       <Button
         :click="openEditAppConfig"
         :disallow="!permissions.allowViewConfig"
@@ -73,31 +71,24 @@
         {{ $t('interactive-editor.menu.edit-app-config-btn') }}
         <AppConfigIcon />
       </Button>
-      <!-- Button to open pages editor -->
-      <Button
-        :click="openEditMultiPages"
-        :disallow="!permissions.allowViewConfig"
-        v-tooltip="tooltip($t('interactive-editor.menu.edit-pages-tooltip'))"
-      >
-        {{ $t('interactive-editor.menu.edit-pages-btn') }}
-        <MultiPagesIcon />
-      </Button>
     </div>
-    <!-- Modals for editing appConfig, pageInfo and pages -->
+    <!-- Modals for editing appConfig + pageInfo -->
     <EditPageInfo />
     <EditAppConfig />
-    <EditMultiPages />
   </div>
 </template>
 
 <script>
-import ConfigSavingMixin from '@/mixins/ConfigSaving';
+import axios from 'axios';
+import jsYaml from 'js-yaml';
+import { Progress } from 'rsup-progress';
+
 import Button from '@/components/FormElements/Button';
 import StoreKeys from '@/utils/StoreMutations';
 import EditPageInfo from '@/components/InteractiveEditor/EditPageInfo';
 import EditAppConfig from '@/components/InteractiveEditor/EditAppConfig';
-import EditMultiPages from '@/components/InteractiveEditor/EditMultiPages';
-import { modalNames } from '@/utils/defaults';
+import { modalNames, localStorageKeys, serviceEndpoints } from '@/utils/defaults';
+import ErrorHandler, { InfoHandler } from '@/utils/ErrorHandler';
 import AccessError from '@/components/Configuration/AccessError';
 
 import SaveLocallyIcon from '@/assets/interface-icons/interactive-editor-save-locally.svg';
@@ -106,23 +97,19 @@ import ExportIcon from '@/assets/interface-icons/interactive-editor-export-chang
 import CancelIcon from '@/assets/interface-icons/interactive-editor-cancel-changes.svg';
 import AppConfigIcon from '@/assets/interface-icons/interactive-editor-app-config.svg';
 import PageInfoIcon from '@/assets/interface-icons/interactive-editor-page-info.svg';
-import MultiPagesIcon from '@/assets/interface-icons/config-pages.svg';
 
 export default {
   name: 'EditModeSaveMenu',
-  mixins: [ConfigSavingMixin],
   components: {
     Button,
     EditPageInfo,
-    EditAppConfig,
-    EditMultiPages,
     SaveLocallyIcon,
     SaveToDiskIcon,
     ExportIcon,
     CancelIcon,
     AppConfigIcon,
     PageInfoIcon,
-    MultiPagesIcon,
+    EditAppConfig,
     AccessError,
   },
   computed: {
@@ -136,6 +123,13 @@ export default {
     showEditMsg() {
       return this.permissions.allowWriteToDisk || this.permissions.allowSaveLocally;
     },
+  },
+  data() {
+    return {
+      saveSuccess: undefined,
+      responseText: '',
+      progress: new Progress({ color: 'var(--progress-bar)' }),
+    };
   },
   methods: {
     reset() {
@@ -154,25 +148,69 @@ export default {
       this.$modal.show(modalNames.EDIT_APP_CONFIG);
       this.$store.commit(StoreKeys.SET_MODAL_OPEN, true);
     },
-    openEditMultiPages() {
-      this.$modal.show(modalNames.EDIT_MULTI_PAGES);
-      this.$store.commit(StoreKeys.SET_MODAL_OPEN, true);
-    },
     tooltip(content) {
       return { content, trigger: 'hover focus', delay: 250 };
     },
     showToast(message, success) {
       this.$toasted.show(message, { className: `toast-${success ? 'success' : 'error'}` });
     },
+    carefullyClearLocalStorage() {
+      localStorage.removeItem(localStorageKeys.PAGE_INFO);
+      localStorage.removeItem(localStorageKeys.APP_CONFIG);
+      localStorage.removeItem(localStorageKeys.CONF_SECTIONS);
+    },
     saveLocally() {
-      const msg = this.$t('interactive-editor.menu.save-locally-warning');
-      const youSure = confirm(msg); // eslint-disable-line no-alert, no-restricted-globals
-      if (youSure) {
-        this.saveConfigLocally(this.config);
+      if (!this.permissions.allowSaveLocally) {
+        ErrorHandler('Unable to save changes locally, this feature has been disabled');
+        return;
       }
+      const data = this.config;
+      localStorage.setItem(localStorageKeys.CONF_SECTIONS, JSON.stringify(data.sections));
+      localStorage.setItem(localStorageKeys.PAGE_INFO, JSON.stringify(data.pageInfo));
+      localStorage.setItem(localStorageKeys.APP_CONFIG, JSON.stringify(data.appConfig));
+      if (data.appConfig.theme) {
+        localStorage.setItem(localStorageKeys.THEME, data.appConfig.theme);
+      }
+      InfoHandler('Config has succesfully been saved in browser storage', 'Config Update');
+      this.showToast(this.$t('config-editor.success-msg-local'), true);
+      this.$store.commit(StoreKeys.SET_EDIT_MODE, false);
     },
     writeToDisk() {
-      this.writeConfigToDisk(this.config);
+      if (this.config.appConfig.preventWriteToDisk) {
+        ErrorHandler('Unable to write changed to disk, as this functionality is disabled');
+        return;
+      }
+      // 1. Convert JSON into YAML
+      const yamlOptions = {};
+      const yaml = jsYaml.dump(this.config, yamlOptions);
+      // 2. Prepare the request
+      const baseUrl = process.env.VUE_APP_DOMAIN || window.location.origin;
+      const endpoint = `${baseUrl}${serviceEndpoints.save}`;
+      const headers = { 'Content-Type': 'text/plain' };
+      const body = { config: yaml, timestamp: new Date() };
+      const request = axios.post(endpoint, body, headers);
+      // 3. Make the request, and handle response
+      this.progress.start();
+      request.then((response) => {
+        this.saveSuccess = response.data.success || false;
+        this.responseText = response.data.message;
+        if (this.saveSuccess) {
+          this.carefullyClearLocalStorage();
+          this.showToast(this.$t('config-editor.success-msg-disk'), true);
+        } else {
+          this.showToast(this.$t('config-editor.error-msg-cannot-save'), false);
+        }
+        InfoHandler('Config has been written to disk succesfully', 'Config Update');
+        this.progress.end();
+        this.$store.commit(StoreKeys.SET_EDIT_MODE, false);
+      })
+        .catch((error) => {
+          this.saveSuccess = false;
+          this.responseText = error;
+          this.showToast(error, false);
+          ErrorHandler(`Failed to save config. ${error}`);
+          this.progress.end();
+        });
     },
   },
 };
@@ -192,15 +230,14 @@ div.edit-mode-bottom-banner {
   background: var(--interactive-editor-background-darker);
   box-shadow: 0 -5px 7px var(--transparent-50);
   grid-template-columns: 45% 10% 45%;
-  @include laptop-up { grid-template-columns: 50% 10% 40%; }
-  @include monitor-up { grid-template-columns: 40% 30% 30%; }
+  @include laptop-up { grid-template-columns: 40% 20% 40%; }
+  @include monitor-up { grid-template-columns: 30% 40% 30%; }
   @include big-screen-up { grid-template-columns: 25% 50% 25%; }
 
   /* Main sections */
   .edit-banner-section {
     padding: 0.5rem;
     height: 90%;
-    display: grid;
     /* Section sub-titles */
     p.section-sub-title {
       margin: 0;
@@ -221,24 +258,22 @@ div.edit-mode-bottom-banner {
         padding: 0 0.5rem;
       }
     }
-    button {
-      margin: 0.25rem;
-      height: stretch;
-      max-height: 3rem;
-    }
     /* Button containers */
-    &.edit-config-buttons-container {
-      grid-template-columns: repeat(3, 1fr);
+    &.edit-site-config-buttons,
+    &.save-buttons-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      button {
+        margin: 0.25rem;
+        height: stretch;
+        max-height: 3rem;
+      }
       p.section-sub-title {
-        grid-column-start: span 3;
+        grid-column-start: span 2;
       }
     }
     &.save-buttons-container {
       grid-row-start: span 2;
-      grid-template-columns: repeat(2, 1fr);
-      p.section-sub-title {
-        grid-column-start: span 2;
-      }
     }
   }
 

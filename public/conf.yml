@@ -45,6 +45,14 @@
     hideSearch: false
     hideSettings: false
     hideFooter: false
+  auth:
+    enableGuestAccess: false
+    users: []
+    enableKeycloak: false
+    keycloak:
+      serverUrl: '''http://'''
+      realm: '''petch'''
+      clientId: '''dashy'''
   showSplashScreen: false
   allowConfigEdit: true
   enableServiceWorker: false

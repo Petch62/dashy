@@ -38,7 +38,7 @@ import { modalNames } from '@/utils/defaults';
 import AccessError from '@/components/Configuration/AccessError';
 import DownloadConfigIcon from '@/assets/interface-icons/config-download-file.svg';
 import CopyConfigIcon from '@/assets/interface-icons/interactive-editor-copy-clipboard.svg';
-import { ErrorHandler, InfoHandler, InfoKeys } from '@/utils/ErrorHandler';
+import { InfoHandler, InfoKeys } from '@/utils/ErrorHandler';
 
 export default {
   name: 'ExportConfigMenu',
@@ -80,13 +80,8 @@ export default {
     },
     copyConfigToClipboard() {
       const config = this.convertJsonToYaml();
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(config);
-        this.$toasted.show(this.$t('config.data-copied-msg'));
-      } else {
-        ErrorHandler('Clipboard access requires HTTPS. See: https://bit.ly/3N5WuAA');
-        this.$toasted.show('Unable to copy, see log', { className: 'toast-error' });
-      }
+      navigator.clipboard.writeText(config);
+      this.$toasted.show(this.$t('config.data-copied-msg'));
       InfoHandler('Config copied to clipboard', InfoKeys.EDITOR);
     },
     modalClosed() {

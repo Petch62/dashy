@@ -2,7 +2,6 @@
 import axios from 'axios';
 import router from '@/router';
 import longPress from '@/directives/LongPress';
-import ErrorHandler from '@/utils/ErrorHandler';
 import {
   openingMethod as defaultOpeningMethod,
   serviceEndpoints,
@@ -42,13 +41,13 @@ export default {
     size() {
       const validSizes = ['small', 'medium', 'large'];
       if (this.itemSize && validSizes.includes(this.itemSize)) return this.itemSize;
-      return this.$store.getters.iconSize || defaultSize;
+      return this.appConfig.iconSize || defaultSize;
     },
     /* Determines if user has enabled online status checks */
     enableStatusCheck() {
       const globalPref = this.appConfig.statusCheck || false;
-      const itemPref = this.item.statusCheck;
-      return typeof itemPref === 'boolean' ? itemPref : globalPref;
+      const itemPref = this.item.statusCheck || false;
+      return itemPref || globalPref;
     },
     /* Determine how often to re-fire status checks */
     statusCheckInterval() {
@@ -59,7 +58,7 @@ export default {
       return interval;
     },
     accumulatedTarget() {
-      return this.item.target || this.appConfig.defaultOpeningMethod || defaultOpeningMethod;
+      return this.target || this.appConfig.defaultOpeningMethod || defaultOpeningMethod;
     },
     /* Convert config target value, into HTML anchor target attribute */
     anchorTarget() {
@@ -150,7 +149,8 @@ export default {
         router.push({ name: 'workspace', query: { url } });
       } else if (this.accumulatedTarget === 'clipboard') {
         e.preventDefault();
-        this.copyToClipboard(url);
+        navigator.clipboard.writeText(url);
+        this.$toasted.show(this.$t('context-menus.item.copied-toast'));
       }
       // Emit event to clear search field, etc
       this.$emit('itemClicked');
@@ -178,7 +178,8 @@ export default {
           router.push({ name: 'workspace', query: { url } });
           break;
         case 'clipboard':
-          this.copyToClipboard(url);
+          navigator.clipboard.writeText(url);
+          this.$toasted.show(this.$t('context-menus.item.copied-toast'));
           break;
         default: window.open(url, '_blank');
       }
@@ -197,19 +198,6 @@ export default {
     /* Closes the context menu, called when user clicks literally anywhere */
     closeContextMenu() {
       this.contextMenuOpen = false;
-    },
-    /* Copies a string to the users clipboard / shows error if not possible  */
-    copyToClipboard(content) {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(content);
-        this.$toasted.show(
-          this.$t('context-menus.item.copied-toast'),
-          { className: 'toast-success' },
-        );
-      } else {
-        ErrorHandler('Clipboard access requires HTTPS. See: https://bit.ly/3N5WuAA');
-        this.$toasted.show('Unable to copy, see log', { className: 'toast-error' });
-      }
     },
     /* Used for smart-sort when sorting items by most used apps */
     incrementMostUsedCount(itemId) {

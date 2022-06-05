@@ -27,7 +27,6 @@ The following file provides a reference of all supported configuration options.
 
 - [**`pageInfo`**](#pageinfo) - Header text, footer, title, navigation, etc
   - [`navLinks`](#pageinfonavlinks-optional) - Links to display in the navigation bar
-- [**`pages`**](#pages-optional) - List of additional config files, for multi-page dashboards
 - [**`appConfig`**](#appconfig-optional) - Main application settings
   - [`webSearch`](#appconfigwebsearch-optional) - Configure web search engine options
   - [`hideComponents`](#appconfighidecomponents-optional) - Show/ hide page components
@@ -36,12 +35,10 @@ The following file provides a reference of all supported configuration options.
     - [`keycloak`](#appconfigauthkeycloak-optional) - Auth config for Keycloak
 - [**`sections`**](#section) - List of sections
   - [`displayData`](#sectiondisplaydata-optional) - Section display settings
-    - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-sectiondisplaydatashowforkeycloakusers-itemdisplaydatahideforkeycloakusers-and-itemdisplaydatashowforkeycloakusers) - Set user controls
+    - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-and-sectiondisplaydatashowforkeycloakusers) - Set user controls
   - [`icon`](#sectionicon-and-sectionitemicon) - Icon for a section
   - [`items`](#sectionitem) - List of items
     - [`icon`](#sectionicon-and-sectionitemicon) - Icon for an item
-    - [`displayData`](#itemdisplaydata-optional) - Item display settings
-      - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-sectiondisplaydatashowforkeycloakusers-itemdisplaydatahideforkeycloakusers-and-itemdisplaydatashowforkeycloakusers) - Set user controls
   - [`widgets`](#sectionwidget-optional) - List of widgets
 - [**Notes**](#notes)
   - [Editing Config through the UI](#editing-config-through-the-ui)
@@ -59,7 +56,6 @@ The following file provides a reference of all supported configuration options.
 **`pageInfo`** | `object` | Required | Basic meta data like title, description, nav bar links, footer text. See [`pageInfo`](#pageinfo)
 **`appConfig`** | `object` | _Optional_ | Settings related to how the app functions, including API keys and global styles. See [`appConfig`](#appconfig-optional)
 **`sections`** | `array` | Required | An array of sections, each containing an array of items, which will be displayed as links. See [`section`](#section)
-**`pages`** | `array` | _Optional_ | An array additional config files, used for multi-page dashboards. See [`pages`](#pages-optional)
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -82,15 +78,6 @@ The following file provides a reference of all supported configuration options.
 **`title`** | `string` |  Required | The text to display on the link button
 **`path`** | `string` | Required | The URL to navigate to when clicked. Can be relative (e.g. `/about`) or absolute (e.g. `https://example.com` or `http://192.168.1.1`)
 **`target`** | `string` |  _Optional_ | The opening method (external links only). Can be either `newtab`, `sametab`, `top` or `parent`. Defaults to `newtab`
-
-**[⬆️ Back to Top](#configuring)**
-
-### `pages[]` _(optional)_
-
-**Field** | **Type** | **Required**| **Description**
---- | --- | --- | ---
-**`name`** | `string` |  Required | A unique name for that page
-**`path`** | `string` |  Required | The path (local or remote) to the config file to use.<br>For files located within `/public`, you only need to specify filename, for externally hosted files you must include the full URL
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -165,7 +152,6 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 **`serverUrl`** | `string` | Required | The URL (or URL/ IP + Port) where your keycloak server is running
 **`realm`** | `string` | Required | The name of the realm (must already be created) that you want to use
 **`clientId`** | `string` | Required | The Client ID of the client you created for use with Dashy
-**`legacySupport`** | `boolean` | _Optional_ | If using Keycloak 17 or older, then set this to `true`
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -226,23 +212,8 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 **`color`** | `string` | _Optional_ | An optional color for the text and font-awesome icon to be displayed in. Note that this will override the current theme and so may not display well
 **`backgroundColor`** | `string` | _Optional_ | An optional background fill color for the that given item. Again, this will override the current theme and so might not display well against the background
 **`provider`** | `string` | _Optional_ | The name of the provider for a given service, useful for when including hosted apps. In some themes, this is visible under the item name
-**`displayData`** | `object` | _Optional_ | Meta-data to optionally overide display settings for a given item. See [`displayData`](#itemdisplaydata-optional)
 
 **[⬆️ Back to Top](#configuring)**
-
-
-### `item.displayData` _(optional)_
-
-**Field** | **Type** | **Required**| **Description**
---- | --- | --- | ---
-**`hideForUsers`** | `string[]` | _Optional_ | Current item will be visible to all users, except for those specified in this list
-**`showForUsers`** | `string[]` | _Optional_ | Current item will be hidden from all users, except for those specified in this list
-**`hideForGuests`** | `boolean` | _Optional_ | Current item will be visible for logged in users, but not for guests (see `appConfig.enableGuestAccess`). Defaults to `false`
-**`hideForKeycloakUsers`** | `object`  | _Optional_ | Current item will be visible to all keycloak users, except for those configured via these groups and roles. See `hideForKeycloakUsers`
-**`showForKeycloakUsers`** | `object`  | _Optional_ | Current item will be hidden from all keycloak users, except for those configured via these groups and roles. See `showForKeycloakUsers`
-
-**[⬆️ Back to Top](#configuring)**
-
 
 ### `section.widget` _(optional)_
 
@@ -276,7 +247,7 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 **`showForUsers`** | `string[]` | _Optional_ | Current section will be hidden from all users, except for those specified in this list
 **`hideForGuests`** | `boolean` | _Optional_ | Current section will be visible for logged in users, but not for guests (see `appConfig.enableGuestAccess`). Defaults to `false`
 **`hideForKeycloakUsers`** | `object`  | _Optional_ | Current section will be visible to all keycloak users, except for those configured via these groups and roles. See `hideForKeycloakUsers`
-**`showForKeycloakUsers`** | `object`  | _Optional_ | Current section will be hidden from all keycloak users, except for those configured via these groups and roles. See `showForKeycloakUsers`
+**`showForKeycloakUsers`** | `object`  | _Optional_ | Current section will be hidden from all keyclaok users, except for those configured via these groups and roles. See `showForKeycloakUsers`
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -288,12 +259,12 @@ For more info, see the **[Authentication Docs](/docs/authentication.md)**
 
 **[⬆️ Back to Top](#configuring)**
 
-### `section.displayData.hideForKeycloakUsers`, `section.displayData.showForKeycloakUsers`, `item.displayData.hideForKeycloakUsers` and `item.displayData.showForKeycloakUsers`
+### `section.displayData.hideForKeycloakUsers` and `section.displayData.showForKeycloakUsers`
 
 **Field** | **Type**   | **Required**| **Description**
 --- |------------| --- | ---
-**`groups`** | `string[]` | _Optional_ | Current Section or Item will be hidden or shown based on the user having any of the groups in this list
-**`roles`** | `string[]` | _Optional_ | Current Section or Item will be hidden or shown based on the user having any of the roles in this list
+**`groups`** | `string[]` | _Optional_ | Current Section will be hidden or shown based on the user having any of the groups in this list
+**`roles`** | `string[]` | _Optional_ | Current Section will be hidden or shown based on the user having any of the roles in this list
 
 **[⬆️ Back to Top](#configuring)**
 
@@ -329,7 +300,7 @@ When updating the config through the JSON editor in the UI, you have two save op
 
 If you have authentication set up, then any user who is not an admin (with `type: admin`) will not be able to write changes to disk.
 
-You can also prevent changes from any user being written to disk, using `preventWriteToDisk`. Or prevent any changes from being saved locally in browser storage, using `preventLocalSave`.
+You can also prevent changes fro any user being written to disk, using `preventWriteToDisk`. Or prevent any changes from being saved locally in browser storage, using `preventLocalSave`.
 
 To disable all UI config features, set `disableConfiguration`.
 

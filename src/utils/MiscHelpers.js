@@ -28,7 +28,7 @@ export const sanitize = (string) => {
 export const timestampToDate = (timestamp) => {
   const localFormat = navigator.language;
   const dateFormat = {
-    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+    weekday: 'short', day: 'numeric', month: 'short', year: '2-digit',
   };
   const date = new Date(timestamp).toLocaleDateString(localFormat, dateFormat);
   return `${date}`;
@@ -133,18 +133,16 @@ export const getTimeDifference = (startTime, endTime) => {
   if (diff < 3600) return `${divide(diff, 60)} minutes`;
   if (diff < 86400) return `${divide(diff, 3600)} hours`;
   if (diff < 604800) return `${divide(diff, 86400)} days`;
-  if (diff < 31557600) return `${divide(diff, 604800)} weeks`;
-  if (diff >= 31557600) return `${divide(diff, 31557600)} years`;
+  if (diff >= 604800) return `${divide(diff, 604800)} weeks`;
   return 'unknown';
 };
 
 /* Given a timestamp, return how long ago it was, e.g. '10 minutes' */
 export const getTimeAgo = (dateTime) => {
   const now = new Date().getTime();
-  const isHistorical = new Date(dateTime).getTime() < now;
   const diffStr = getTimeDifference(dateTime, now);
   if (diffStr === 'unknown') return diffStr;
-  return isHistorical ? `${diffStr} ago` : `in ${diffStr}`;
+  return `${diffStr} ago`;
 };
 
 /* Given the name of a CSS variable, returns it's value */
