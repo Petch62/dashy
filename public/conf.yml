@@ -45,12 +45,6 @@
     hideSearch: false
     hideSettings: false
     hideFooter: false
-  auth:
-    enableKeycloak: true
-    keycloak:
-      serverUrl: 'http://localhost:8081'
-      realm: 'alicia-homelab'
-      clientId: 'dashy'
   showSplashScreen: false
   allowConfigEdit: true
   enableServiceWorker: false
