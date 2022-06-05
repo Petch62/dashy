@@ -1,3 +1,18 @@
+---
+# Page meta info, like heading, footer text and nav links
+pageInfo:
+  title: Dashy
+  description: ''
+  navLinks:
+    - title: Home
+      path: /
+    - title: About
+      path: /about
+    - title: Source Code
+      path: https://github.com/Lissy93/dashy
+  footerText: ''
+
+# Optional app settings and configuration  
  appConfig:
   theme: colorful
   fontAwesomeKey: 0821c65656
@@ -45,17 +60,8 @@
   disableUpdateChecks: false
   disableSmartSort: false
   enableErrorReporting: false
-pageInfo:
-  title: Dashy
-  description: ''
-  navLinks:
-    - title: Home
-      path: /
-    - title: About
-      path: /about
-    - title: Source Code
-      path: https://github.com/Lissy93/dashy
-  footerText: ''
+
+# Main content - An array of sections, each containing an array of items  
 sections:
   - name: Today
     icon: far fa-calendar
